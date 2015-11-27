@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+    <appender name="ROLL" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="/linkonomics/log/scheduler.log"/>
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="10MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%-5p] [%-20t] %C : %m%n"/>
+        </layout>
+    </appender>
+    <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%-5p] [%-20t] %C : %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="levelMin" value="INFO"/>
+            <param name="levelMax" value="ERROR"/>
+        </filter>
+    </appender>
+    <category name="org.apache.log4j.xml">
+        <priority value="info"/>
+    </category>
+    <root>
+        <priority value="info"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ROLL"/>
+    </root>
+</log4j:configuration>
