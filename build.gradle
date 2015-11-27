@@ -37,7 +37,7 @@ project(':ux') {
         httpPort = 8090
         httpsPort = 8091
         enableSSL = true
-        contextPath = 'spring-angular'
+        contextPath = 'linkviewer'
     }
 }
 
