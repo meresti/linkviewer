@@ -35,10 +35,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan("meresti.linkviewer.rest.controllers")
 @PropertySource("classpath:/meresti/webapp.properties")
 public class WebConfig extends WebMvcConfigurerAdapter {
-//    @PostConstruct
-//    public void initLog4j() throws FileNotFoundException {
-//        Log4jConfigurer.initLogging("classpath:tutorial/log4j.xml");
-//    }
 
 //    @Override
 //    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {

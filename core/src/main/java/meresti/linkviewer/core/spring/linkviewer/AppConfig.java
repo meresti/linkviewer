@@ -24,8 +24,16 @@ package meresti.linkviewer.core.spring.linkviewer;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Log4jConfigurer;
+
+import javax.annotation.PostConstruct;
+import java.io.FileNotFoundException;
 
 @Configuration
 @ComponentScan("meresti.linkviewer.core.services.impl")
 public class AppConfig {
+    @PostConstruct
+    public void initLog4j() throws FileNotFoundException {
+        Log4jConfigurer.initLogging("classpath:log4j.xml");
+    }
 }
