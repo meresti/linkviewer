@@ -1,3 +1,10 @@
+.page-host {
+    background-color: #ecf3f5;
+    overflow: hidden;
+}
+
+/*From aurelia navigation skeleton (slightly changed)*/
+
 body {
     margin: 0;
 }
@@ -12,8 +19,8 @@ body {
     font-size: 72px;
     line-height: 72px;
     text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
-    text-transform: uppercase;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #f49210;
 }
 
 .splash .fa-spinner {
@@ -29,8 +36,6 @@ body {
     right: 0;
     top: 50px;
     bottom: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
 }
 
 @media print {
