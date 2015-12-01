@@ -7,9 +7,12 @@ apply plugin: 'idea';
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.3'
+        classpath "com.moowork.gradle:gradle-node-plugin:0.11"
+        classpath 'com.moowork.gradle:gradle-gulp-plugin:0.11'
     }
 }
 
@@ -20,8 +23,11 @@ project(':ux') {
 
     def tomcatVersion = '7.0.59'
 
+    apply plugin: 'java'
     apply plugin: 'war'
     apply plugin: 'com.bmuschko.tomcat'
+    apply plugin: 'com.moowork.node'
+    apply plugin: 'com.moowork.gulp'
 
     dependencies {
         compile project(':core')
@@ -32,12 +38,45 @@ project(':ux') {
                 "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
     }
 
+    node {
+        // Version of node to use.
+        version = '0.11.10'
+
+        download = false
+
+        // Set the work directory where node_modules should be located
+        nodeModulesDir = file("${project.projectDir}\\src\\main\\webapp\\app")
+    }
+
+    gulp {
+        // Set the directory where gulpfile.js should be found
+        workDir = file("${project.projectDir}\\src\\main\\webapp\\app")
+
+        // Whether colors should output on the terminal
+        colors = true
+
+        // Whether output from Gulp should be buffered - useful when running tasks in parallel
+        bufferOutput = false
+    }
 
     tomcat {
         httpPort = 8090
         httpsPort = 8091
         enableSSL = true
         contextPath = 'linkviewer'
+    }
+
+    war {
+//        dependsOn gulp_export
+
+//        from  ('src/main/webapp/app'){
+//            exclude '*/**'
+//        }
+//        include "${project.projectDir}/src/main/webapp/app/export/**"
+//        exclude "${project.projectDir}/src/main/webapp/app/jspm_packages/**"
+//        exclude "${project.projectDir}/src/main/webapp/app/node_modules/**"
+
+        zip64 = true
     }
 }
 

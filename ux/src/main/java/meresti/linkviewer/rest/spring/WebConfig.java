@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
@@ -35,6 +36,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan("meresti.linkviewer.rest.controllers")
 @PropertySource("classpath:/meresti/webapp.properties")
 public class WebConfig extends WebMvcConfigurerAdapter {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/app/index.html").addResourceLocations("/app/index.html");
+        registry.addResourceHandler("/app/**").addResourceLocations("/app/dist/");
+    }
 
 //    @Override
 //    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {

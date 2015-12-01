@@ -1,0 +1,23 @@
+.settings
+.gradle
+*/build
+
+ux/src/main/webapp/app/bower_components
+ux/src/main/webapp/app/build/reports
+ux/src/main/webapp/app/coverage
+ux/src/main/webapp/app/dist
+ux/src/main/webapp/app/export
+ux/src/main/webapp/app/jspm_packages
+ux/src/main/webapp/app/node_modules
+
+# Eclipse artifacts, including WTP generated manifests
+.classpath
+.project
+
+# IDEA artifacts and output dirs
+*.iml
+*.ipr
+*.iws
+.idea
+out
+test-output
