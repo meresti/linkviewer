@@ -6,24 +6,24 @@
     <div class="cards clearfix" scroll.trigger="handleScrollEvent($event) & throttle:250">
         <div class="card2" repeat.for="card of cards">
             <a target="_blank" href.bind="card.url">
-                <div class="card-image" css="background-image: url(${card.image});"></div>
+                <div class="card-image" css="background-image: url(${card.imageUrl});"></div>
                 <div class="card-text">
                     <div class="card-title">${card.title}</div>
-                    <span class="card-description">${card.description}</span>
+                    <div class="card-description">${card.description}</div>
                 </div>
             </a>
 
             <div class="card-buttons clearfix">
-        <span class="card-buttons-left">
-          <span class="card-btn icon-plus-circled"></span>
-          <span class="card-btn icon-minus-circled"></span>
-        </span>
-        <span class="card-buttons-right">
-          <span class="card-btn icon-thumbs-up-alt"></span>
-          <span class="card-btn icon-thumbs-down-alt"></span>
-          <span class="card-btn icon-forward"></span>
-          <span class="card-btn icon-star"></span>
-        </span>
+                <div class="card-buttons-left">
+                    <span class="card-btn icon-plus-circled"></span>
+                    <span class="card-btn icon-minus-circled"></span>
+                </div>
+                <div class="card-buttons-right">
+                    <span class="card-btn icon-thumbs-up-alt"></span>
+                    <span class="card-btn icon-thumbs-down-alt"></span>
+                    <span class="card-btn icon-forward"></span>
+                    <span class="card-btn icon-star"></span>
+                </div>
             </div>
         </div>
     </div>

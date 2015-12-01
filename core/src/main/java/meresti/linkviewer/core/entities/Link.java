@@ -27,9 +27,19 @@ import java.math.BigInteger;
 public class Link {
     private BigInteger id;
     private String url;
+    private String imageUrl;
     private String title;
     private String description;
-    private String imageUrl;
+
+    public Link() {
+    }
+
+    public Link(String url, String imageUrl, String title, String description) {
+        this.url = url;
+        this.imageUrl = imageUrl;
+        this.title = title;
+        this.description = description;
+    }
 
     public BigInteger getId() {
         return id;
@@ -47,6 +57,14 @@ public class Link {
         this.url = url;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -61,13 +79,5 @@ public class Link {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 }
