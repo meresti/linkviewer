@@ -18,6 +18,8 @@ ux/src/main/webapp/app/node_modules
 *.iml
 *.ipr
 *.iws
-.idea
+.idea/*
+!.idea/copyright/MIT.xml
+!.idea/copyright/profiles_settings.xml
 out
 test-output
