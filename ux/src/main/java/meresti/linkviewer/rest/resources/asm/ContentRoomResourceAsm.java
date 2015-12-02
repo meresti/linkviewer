@@ -22,24 +22,24 @@
 
 package meresti.linkviewer.rest.resources.asm;
 
-import meresti.linkviewer.core.entities.Link;
+import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.rest.controllers.ContentRoomController;
-import meresti.linkviewer.rest.resources.LinkResource;
+import meresti.linkviewer.rest.resources.ContentRoomResource;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
-public class LinkResourceAsm extends ResourceAssemblerSupport<Link, LinkResource> {
-    public LinkResourceAsm() {
-        super(ContentRoomController.class, LinkResource.class);
+public class ContentRoomResourceAsm extends ResourceAssemblerSupport<ContentRoom, ContentRoomResource> {
+
+    public ContentRoomResourceAsm() {
+        super(ContentRoomController.class, ContentRoomResource.class);
     }
 
     @Override
-    public LinkResource toResource(final Link entity) {
-        final LinkResource result = new LinkResource(entity.getId(), entity.getUrl(), entity.getTitle(), entity.getDescription(), entity.getImageUrl());
-//        result.add(linkTo(methodOn(LinkController.class).getLink(entity.getId())).withSelfRel());
-        return result;
+    public ContentRoomResource toResource(final ContentRoom entity) {
+        final ContentRoomResource resource = new ContentRoomResource(entity.getId(), entity.getName());
+        return resource;
     }
 
-    public Link fromResource(final LinkResource resource) {
-        return new Link(resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
+    public ContentRoom fromResource(final ContentRoomResource sentResource) {
+        return new ContentRoom(sentResource.getRoomId(), sentResource.getName(), null);
     }
 }

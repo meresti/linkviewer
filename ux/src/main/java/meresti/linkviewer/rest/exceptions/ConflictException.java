@@ -20,26 +20,19 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources.asm;
+package meresti.linkviewer.rest.exceptions;
 
-import meresti.linkviewer.core.entities.Link;
-import meresti.linkviewer.rest.controllers.ContentRoomController;
-import meresti.linkviewer.rest.resources.LinkResource;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class LinkResourceAsm extends ResourceAssemblerSupport<Link, LinkResource> {
-    public LinkResourceAsm() {
-        super(ContentRoomController.class, LinkResource.class);
+@ResponseStatus(value = HttpStatus.CONFLICT)
+public class ConflictException extends RuntimeException {
+    private static final long serialVersionUID = -4965719029004076955L;
+
+    public ConflictException() {
     }
 
-    @Override
-    public LinkResource toResource(final Link entity) {
-        final LinkResource result = new LinkResource(entity.getId(), entity.getUrl(), entity.getTitle(), entity.getDescription(), entity.getImageUrl());
-//        result.add(linkTo(methodOn(LinkController.class).getLink(entity.getId())).withSelfRel());
-        return result;
-    }
-
-    public Link fromResource(final LinkResource resource) {
-        return new Link(resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
+    public ConflictException(final Throwable cause) {
+        super(cause);
     }
 }

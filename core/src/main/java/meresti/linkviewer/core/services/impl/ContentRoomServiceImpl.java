@@ -22,17 +22,24 @@
 
 package meresti.linkviewer.core.services.impl;
 
+import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.Link;
-import meresti.linkviewer.core.services.LinkService;
+import meresti.linkviewer.core.exceptions.ObjectAlreadyExists;
+import meresti.linkviewer.core.services.ContentRoomService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Service
-public class LinkServiceImpl implements LinkService {
+public class ContentRoomServiceImpl implements ContentRoomService {
 
     private static final List<Link> LINKS = Arrays.asList(
             new Link("http://www.nevillehobson.com/2014/09/09/transparent-wearable-technology-within-enterprise/",
@@ -233,19 +240,62 @@ public class LinkServiceImpl implements LinkService {
                     "Шкафы — Армавир Если вас не устраивают результаты поиска, попробуйте изменить запрос, убрать неключевые слова из поискового запроса и/или оптимизируйте вид поиска. Первое слово в запросе самое важное "
             ));
 
-    @Override
-    public List<Link> findLinks(long startIndex, long pageSize) {
-        if (startIndex >= 0 && startIndex < LINKS.size()) {
-            int fromIndex = (int) startIndex;
-            int toIndex = Math.min((int) (startIndex + pageSize), LINKS.size());
-            return LINKS.subList(fromIndex, toIndex);
-        } else {
-            return Collections.emptyList();
-        }
+    private final Map<BigInteger, List<Link>> rooms = new ConcurrentHashMap<>();
+    private final Map<String, BigInteger> roomIdsByName = new ConcurrentHashMap<>();
+
+    private final AtomicLong counter = new AtomicLong(1L);
+
+    public ContentRoomServiceImpl() {
+        rooms.put(BigInteger.ONE, new CopyOnWriteArrayList<>(LINKS));
+        roomIdsByName.put("default", BigInteger.ONE);
     }
 
     @Override
-    public Link findById(BigInteger id) {
+    public ContentRoom createRoom(final ContentRoom room) {
+        final String name = room.getName();
+        if (roomIdsByName.containsKey(name)) {
+            throw new ObjectAlreadyExists(name);
+        }
+        final BigInteger id = BigInteger.valueOf(counter.incrementAndGet());
+        roomIdsByName.put(name, id);
+        rooms.put(id, new CopyOnWriteArrayList<>());
+
+        return new ContentRoom(id, name, null);
+    }
+
+    @Override
+    public ContentRoom deleteRoom(final ContentRoom room) {
+        final String name = room.getName();
+        final BigInteger id = roomIdsByName.remove(name);
+        if (id != null) {
+            rooms.remove(id);
+        }
+
+        return new ContentRoom(id, name, null);
+    }
+
+    @Override
+    public List<ContentRoom> getRooms() {
+        return roomIdsByName.entrySet().stream().map(e -> new ContentRoom(e.getValue(), e.getKey(), null)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Link> findLinks(final BigInteger roomId, final long startIndex, final long pageSize) {
+        final List<Link> result;
+
+        final List<Link> links = rooms.get(roomId);
+        if (links != null && startIndex >= 0 && startIndex < links.size()) {
+            final int fromIndex = (int) startIndex;
+            final int toIndex = Math.min((int) (startIndex + pageSize), links.size());
+            result = links.subList(fromIndex, toIndex);
+        } else {
+            result = Collections.emptyList();
+        }
+        return result;
+    }
+
+    @Override
+    public Link findById(final BigInteger id) {
         final Link link = new Link();
         link.setId(id);
         link.setUrl("http://some.url");

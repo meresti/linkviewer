@@ -20,26 +20,39 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources.asm;
+package meresti.linkviewer.rest.resources;
 
-import meresti.linkviewer.core.entities.Link;
-import meresti.linkviewer.rest.controllers.ContentRoomController;
-import meresti.linkviewer.rest.resources.LinkResource;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.ResourceSupport;
 
-public class LinkResourceAsm extends ResourceAssemblerSupport<Link, LinkResource> {
-    public LinkResourceAsm() {
-        super(ContentRoomController.class, LinkResource.class);
+import java.math.BigInteger;
+
+public class ContentRoomResource extends ResourceSupport {
+
+    private BigInteger roomId;
+    private String name;
+
+    // Used by JSON serialization
+    public ContentRoomResource() {
     }
 
-    @Override
-    public LinkResource toResource(final Link entity) {
-        final LinkResource result = new LinkResource(entity.getId(), entity.getUrl(), entity.getTitle(), entity.getDescription(), entity.getImageUrl());
-//        result.add(linkTo(methodOn(LinkController.class).getLink(entity.getId())).withSelfRel());
-        return result;
+    public ContentRoomResource(final BigInteger roomId, final String name) {
+        this.roomId = roomId;
+        this.name = name;
     }
 
-    public Link fromResource(final LinkResource resource) {
-        return new Link(resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
+    public BigInteger getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(final BigInteger roomId) {
+        this.roomId = roomId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 }

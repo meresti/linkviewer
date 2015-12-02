@@ -20,26 +20,21 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources.asm;
+package meresti.linkviewer.core.exceptions;
 
-import meresti.linkviewer.core.entities.Link;
-import meresti.linkviewer.rest.controllers.ContentRoomController;
-import meresti.linkviewer.rest.resources.LinkResource;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-
-public class LinkResourceAsm extends ResourceAssemblerSupport<Link, LinkResource> {
-    public LinkResourceAsm() {
-        super(ContentRoomController.class, LinkResource.class);
+public class ObjectAlreadyExists extends RuntimeException {
+    public ObjectAlreadyExists() {
     }
 
-    @Override
-    public LinkResource toResource(final Link entity) {
-        final LinkResource result = new LinkResource(entity.getId(), entity.getUrl(), entity.getTitle(), entity.getDescription(), entity.getImageUrl());
-//        result.add(linkTo(methodOn(LinkController.class).getLink(entity.getId())).withSelfRel());
-        return result;
+    public ObjectAlreadyExists(final String message) {
+        super(message);
     }
 
-    public Link fromResource(final LinkResource resource) {
-        return new Link(resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
+    public ObjectAlreadyExists(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public ObjectAlreadyExists(final Throwable cause) {
+        super(cause);
     }
 }

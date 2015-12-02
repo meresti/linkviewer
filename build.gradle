@@ -82,6 +82,7 @@ project(':ux') {
 
 configure(allprojects) { project ->
     apply plugin: "java"
+    compileJava.options.encoding = 'UTF-8'
 
     repositories {
         mavenCentral()

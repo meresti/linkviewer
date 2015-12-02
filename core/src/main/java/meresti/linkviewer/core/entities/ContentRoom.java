@@ -20,15 +20,43 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.services;
-
-import meresti.linkviewer.core.entities.Link;
+package meresti.linkviewer.core.entities;
 
 import java.math.BigInteger;
 import java.util.List;
 
-public interface LinkService {
-    List<Link> findLinks(long startIndex, long pageSize);
+public class ContentRoom {
+    private BigInteger id;
+    private String name;
+    private List<BigInteger> links;
 
-    Link findById(BigInteger id);
+    public ContentRoom(final BigInteger id, final String name, final List<BigInteger> links) {
+        this.id = id;
+        this.name = name;
+        this.links = links;
+    }
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(final BigInteger id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public List<BigInteger> getLinks() {
+        return links;
+    }
+
+    public void setLinks(final List<BigInteger> links) {
+        this.links = links;
+    }
 }

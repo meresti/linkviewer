@@ -20,26 +20,23 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources.asm;
+package meresti.linkviewer.core.services;
 
+import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.Link;
-import meresti.linkviewer.rest.controllers.ContentRoomController;
-import meresti.linkviewer.rest.resources.LinkResource;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
-public class LinkResourceAsm extends ResourceAssemblerSupport<Link, LinkResource> {
-    public LinkResourceAsm() {
-        super(ContentRoomController.class, LinkResource.class);
-    }
+import java.math.BigInteger;
+import java.util.List;
 
-    @Override
-    public LinkResource toResource(final Link entity) {
-        final LinkResource result = new LinkResource(entity.getId(), entity.getUrl(), entity.getTitle(), entity.getDescription(), entity.getImageUrl());
-//        result.add(linkTo(methodOn(LinkController.class).getLink(entity.getId())).withSelfRel());
-        return result;
-    }
+public interface ContentRoomService {
 
-    public Link fromResource(final LinkResource resource) {
-        return new Link(resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
-    }
+    ContentRoom createRoom(ContentRoom room);
+
+    ContentRoom deleteRoom(ContentRoom room);
+
+    List<ContentRoom> getRooms();
+
+    List<Link> findLinks(BigInteger roomId, long startIndex, long pageSize);
+
+    Link findById(BigInteger id);
 }
