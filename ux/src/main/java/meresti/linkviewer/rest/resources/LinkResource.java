@@ -22,14 +22,12 @@
 
 package meresti.linkviewer.rest.resources;
 
-import meresti.linkviewer.rest.jackson.annotations.JsonBigInteger;
 import org.springframework.hateoas.ResourceSupport;
 
 import java.math.BigInteger;
 
 public class LinkResource extends ResourceSupport {
 
-    @JsonBigInteger
     private BigInteger linkId;
 
     private String url;
