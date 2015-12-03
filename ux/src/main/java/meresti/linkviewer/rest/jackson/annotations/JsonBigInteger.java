@@ -20,42 +20,23 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources;
+package meresti.linkviewer.rest.jackson.annotations;
 
-import meresti.linkviewer.rest.jackson.annotations.JsonBigInteger;
-import org.springframework.hateoas.ResourceSupport;
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import meresti.linkviewer.rest.jackson.desrializers.BigIntegerDeserializer;
+import meresti.linkviewer.rest.jackson.serializers.BigIntegerSerializer;
 
-import java.math.BigInteger;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class ContentRoomResource extends ResourceSupport {
-
-    @JsonBigInteger
-    private BigInteger roomId;
-
-    private String name;
-
-    // Used by JSON serialization
-    public ContentRoomResource() {
-    }
-
-    public ContentRoomResource(final BigInteger roomId, final String name) {
-        this.roomId = roomId;
-        this.name = name;
-    }
-
-    public BigInteger getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(final BigInteger roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@JsonSerialize(using = BigIntegerSerializer.class)
+@JsonDeserialize(using = BigIntegerDeserializer.class)
+@JacksonAnnotationsInside
+public @interface JsonBigInteger {
 }

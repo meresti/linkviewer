@@ -20,42 +20,27 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources;
+package meresti.linkviewer.rest.jackson.desrializers;
 
-import meresti.linkviewer.rest.jackson.annotations.JsonBigInteger;
-import org.springframework.hateoas.ResourceSupport;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 
+import java.io.IOException;
 import java.math.BigInteger;
 
-public class ContentRoomResource extends ResourceSupport {
+public class BigIntegerDeserializer extends StdScalarDeserializer<BigInteger> {
 
-    @JsonBigInteger
-    private BigInteger roomId;
+    private static final long serialVersionUID = -2509081429967165613L;
 
-    private String name;
-
-    // Used by JSON serialization
-    public ContentRoomResource() {
+    public BigIntegerDeserializer() {
+        super(BigInteger.class);
     }
 
-    public ContentRoomResource(final BigInteger roomId, final String name) {
-        this.roomId = roomId;
-        this.name = name;
-    }
-
-    public BigInteger getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(final BigInteger roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
+    @Override
+    public BigInteger deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        final String value = p.getValueAsString();
+        return value == null ? null : new BigInteger(value);
     }
 }

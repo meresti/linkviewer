@@ -20,42 +20,29 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources;
+package meresti.linkviewer.rest.jackson.serializers;
 
-import meresti.linkviewer.rest.jackson.annotations.JsonBigInteger;
-import org.springframework.hateoas.ResourceSupport;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 
+import java.io.IOException;
 import java.math.BigInteger;
 
-public class ContentRoomResource extends ResourceSupport {
+public class BigIntegerSerializer extends StdScalarSerializer<BigInteger> {
 
-    @JsonBigInteger
-    private BigInteger roomId;
+    private static final long serialVersionUID = 1033200021248926991L;
 
-    private String name;
-
-    // Used by JSON serialization
-    public ContentRoomResource() {
+    public BigIntegerSerializer() {
+        super(BigInteger.class);
     }
 
-    public ContentRoomResource(final BigInteger roomId, final String name) {
-        this.roomId = roomId;
-        this.name = name;
-    }
-
-    public BigInteger getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(final BigInteger roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
+    @Override
+    public void serialize(final BigInteger value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+        if (value != null) {
+            gen.writeString(value.toString());
+        } else {
+            gen.writeNull();
+        }
     }
 }

@@ -87,7 +87,7 @@ public class ContentRoomControllerTest {
         mockMvc.perform(get("/rooms"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-//                .andExpect(jsonPath("$[0].roomId", is(contentRoom.getId().toString())))
+                .andExpect(jsonPath("$[0].roomId", is(contentRoom.getId().toString())))
                 .andExpect(jsonPath("$[0].name", is(contentRoom.getName())));
     }
 
