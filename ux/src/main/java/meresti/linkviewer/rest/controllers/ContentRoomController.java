@@ -36,7 +36,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -92,12 +96,21 @@ public class ContentRoomController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/{roomId}/links/{linkId}")
-    public LinkResource getLink(@PathVariable("roomId") final BigInteger roomId, @PathVariable("linkId") final BigInteger linkId) {
+    public LinkResource getLink(@PathVariable("roomId") final BigInteger roomId,
+                                @PathVariable("linkId") final BigInteger linkId) {
+
         final Link link = contentRoomService.findById(linkId);
         if (link == null) {
             throw new NotFoundException();
         }
         final ResourceAssembler<Link, LinkResource> asm = new LinkResourceAsm();
         return asm.toResource(link);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/{roomId}/links")
+    public LinkResource addLinkToRoom(@PathVariable("roomId") final BigInteger roomId,
+                                      @RequestBody final LinkResource sentLinkResource) {
+
+        return sentLinkResource;
     }
 }

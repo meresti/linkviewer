@@ -20,19 +20,17 @@
  * SOFTWARE.
  */
 
-import {HttpClient} from 'aurelia-fetch-client';
-import 'fetch';
+import {HttpClient} from 'aurelia-http-client';
 
-export class LinkService {
+export class ContentRoomService {
     constructor() {
-        this.http = new HttpClient().configure(config=> {
-            config.useStandardConfiguration();
+        this.http = new HttpClient().configure(x=> {
+            x.withBaseUrl('/linkviewer');
         });
     }
 
 
-    getLinks(roomId, currentIndex, batchSize) {
-        return this.http.fetch('/linkviewer/rooms/' + roomId + '/links/' + currentIndex + '/' + batchSize)
-            .then(response => response.json());
+    addLinkToRoom(roomId, link) {
+        this.http.post('/rooms/' + roomId + '/links', link);
     }
 }

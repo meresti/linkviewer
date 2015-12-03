@@ -38,6 +38,11 @@ public class LinkResource extends ResourceSupport {
 
     private String imageUrl;
 
+    //used by JSON serializer
+    public LinkResource() {
+
+    }
+
     public LinkResource(final BigInteger linkId, final String url, final String title, final String description, final String imageUrl) {
         this.linkId = linkId;
         this.url = url;
