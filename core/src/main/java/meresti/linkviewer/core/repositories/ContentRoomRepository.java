@@ -20,20 +20,22 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.spring.linkviewer;
+package meresti.linkviewer.core.repositories;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Log4jConfigurer;
+import meresti.linkviewer.core.entities.ContentRoom;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import javax.annotation.PostConstruct;
-import java.io.FileNotFoundException;
+import java.math.BigInteger;
+import java.util.List;
 
-@Configuration
-@ComponentScan("meresti.linkviewer.core.services.impl")
-public class AppConfig {
-    @PostConstruct
-    public void initLog4j() throws FileNotFoundException {
-        Log4jConfigurer.initLogging("classpath:log4j.xml");
-    }
+public interface ContentRoomRepository extends MongoRepository<ContentRoom, BigInteger> {
+
+    @Override
+    ContentRoom findOne(BigInteger id);
+
+    @Override
+    <S extends ContentRoom> S save(S entity);
+
+    @Override
+    <S extends ContentRoom> List<S> save(Iterable<S> entites);
 }

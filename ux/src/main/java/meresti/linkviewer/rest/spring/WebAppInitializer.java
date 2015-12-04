@@ -22,7 +22,7 @@
 
 package meresti.linkviewer.rest.spring;
 
-import meresti.linkviewer.core.spring.linkviewer.AppConfig;
+import meresti.linkviewer.core.spring.AppConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {

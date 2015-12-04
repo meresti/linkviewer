@@ -26,7 +26,9 @@ import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.Link;
 import meresti.linkviewer.core.exceptions.ObjectAlreadyExistsException;
 import meresti.linkviewer.core.exceptions.ObjectNotFoundException;
+import meresti.linkviewer.core.repositories.ContentRoomRepository;
 import meresti.linkviewer.core.services.ContentRoomService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -297,6 +299,9 @@ public class ContentRoomServiceImpl implements ContentRoomService {
 
     private final AtomicLong counter = new AtomicLong(1L);
 
+    @Autowired
+    private ContentRoomRepository contentRoomRepository;
+
     public ContentRoomServiceImpl() {
         rooms.put(BigInteger.ONE, new CopyOnWriteArrayList<>(LINKS));
         roomIdsByName.put("default", BigInteger.ONE);
@@ -313,6 +318,8 @@ public class ContentRoomServiceImpl implements ContentRoomService {
         roomIdsByName.put(name, id);
         roomNamesById.put(id, name);
         rooms.put(id, new CopyOnWriteArrayList<>());
+
+        final ContentRoom savedRoom = contentRoomRepository.save(room);
 
         return new ContentRoom(id, name, null);
     }

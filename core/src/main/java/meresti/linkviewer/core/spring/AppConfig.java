@@ -20,48 +20,27 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.entities;
+package meresti.linkviewer.core.spring;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.util.Log4jConfigurer;
 
-import java.math.BigInteger;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.io.FileNotFoundException;
 
-@Document(collection = "ContentRoom")
-public class ContentRoom {
-    @Id
-    private BigInteger id;
-    private String name;
-    private List<BigInteger> links;
-
-    public ContentRoom(final BigInteger id, final String name, final List<BigInteger> links) {
-        this.id = id;
-        this.name = name;
-        this.links = links;
+@Configuration
+@ComponentScan("meresti.linkviewer.core.services.impl")
+@PropertySource("classpath:/meresti/linkviewer/spring/app.properties")
+@Import(RepositoryConfig.class)
+public class AppConfig {
+    @PostConstruct
+    public void initLog4j() throws FileNotFoundException {
+        Log4jConfigurer.initLogging("classpath:log4j.xml");
     }
 
-    public BigInteger getId() {
-        return id;
-    }
-
-    public void setId(final BigInteger id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public List<BigInteger> getLinks() {
-        return links;
-    }
-
-    public void setLinks(final List<BigInteger> links) {
-        this.links = links;
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigIn() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 }

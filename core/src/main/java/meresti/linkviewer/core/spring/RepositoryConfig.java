@@ -20,48 +20,35 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.entities;
+package meresti.linkviewer.core.spring;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import java.math.BigInteger;
-import java.util.List;
+@Configuration
+@EnableMongoRepositories("meresti.linkviewer.core.repositories")
+public class RepositoryConfig extends AbstractMongoConfiguration {
 
-@Document(collection = "ContentRoom")
-public class ContentRoom {
-    @Id
-    private BigInteger id;
-    private String name;
-    private List<BigInteger> links;
+    @Value("${mongodb.host}")
+    private String host;
 
-    public ContentRoom(final BigInteger id, final String name, final List<BigInteger> links) {
-        this.id = id;
-        this.name = name;
-        this.links = links;
+    @Value("${mongodb.port}")
+    private int port;
+
+    @Value("${mongodb.dbName}")
+    private String databaseName;
+
+    @Override
+    protected String getDatabaseName() {
+        return databaseName;
     }
 
-    public BigInteger getId() {
-        return id;
-    }
-
-    public void setId(final BigInteger id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public List<BigInteger> getLinks() {
-        return links;
-    }
-
-    public void setLinks(final List<BigInteger> links) {
-        this.links = links;
+    @Override
+    public Mongo mongo() throws Exception {
+        return new MongoClient(host, port);
     }
 }
