@@ -22,19 +22,19 @@
 
 package meresti.linkviewer.core.exceptions;
 
-public class ObjectAlreadyExists extends RuntimeException {
-    public ObjectAlreadyExists() {
+public class ObjectNotFoundException extends RuntimeException {
+    public ObjectNotFoundException() {
     }
 
-    public ObjectAlreadyExists(final String message) {
+    public ObjectNotFoundException(final String message) {
         super(message);
     }
 
-    public ObjectAlreadyExists(final String message, final Throwable cause) {
+    public ObjectNotFoundException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public ObjectAlreadyExists(final Throwable cause) {
+    public ObjectNotFoundException(final Throwable cause) {
         super(cause);
     }
 }

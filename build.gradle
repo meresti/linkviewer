@@ -40,17 +40,21 @@ project(':ux') {
 
     node {
         // Version of node to use.
-        version = '0.11.10'
+        version = '5.1.1'
 
-        download = false
+        distBaseUrl = 'https://nodejs.org/dist'
+        download = true
+
+        // Set the work directory for unpacking node
+        workDir = file("${project.buildDir}/nodejs")
 
         // Set the work directory where node_modules should be located
-        nodeModulesDir = file("${project.projectDir}\\src\\main\\webapp\\app")
+        nodeModulesDir = file("${project.projectDir}/src/main/webapp/app")
     }
 
     gulp {
         // Set the directory where gulpfile.js should be found
-        workDir = file("${project.projectDir}\\src\\main\\webapp\\app")
+        workDir = file("${project.projectDir}/src/main/webapp/app")
 
         // Whether colors should output on the terminal
         colors = true

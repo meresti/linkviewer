@@ -24,6 +24,7 @@ package meresti.linkviewer.rest.controllers;
 
 import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.Link;
+import meresti.linkviewer.core.exceptions.ObjectNotFoundException;
 import meresti.linkviewer.core.services.ContentRoomService;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,8 @@ import java.util.Collections;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.AdditionalAnswers.returnsSecondArg;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -119,10 +122,37 @@ public class ContentRoomControllerTest {
     }
 
     @Test
+    public void testAddLinkToRoom() throws Exception {
+        when(contentRoomService.addLinkToRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArg());
+
+        final String dummyLinkJson = "{\"linkId\":1, \"url\":\"http://some.url\",\"title\":\"A dummy link\"}";
+        mockMvc.perform(post("/rooms/{roomId}/links", BigInteger.ONE).content(dummyLinkJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAddLinkToNonExistentRoom() throws Exception {
+        when(contentRoomService.addLinkToRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenThrow(new ObjectNotFoundException(BigInteger.ONE.toString()));
+
+        final String dummyLinkJson = "{\"linkId\":1, \"url\":\"http://some.url\",\"title\":\"A dummy link\"}";
+        mockMvc.perform(post("/rooms/{roomId}/links", BigInteger.ONE).content(dummyLinkJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testRemoveLinkFromRoom() throws Exception {
+        when(contentRoomService.removeLinkFromRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArg());
+
+        final String dummyLinkJson = "{\"linkId\":1, \"url\":\"http://some.url\",\"title\":\"A dummy link\"}";
+        mockMvc.perform(delete("/rooms/{roomId}/links", BigInteger.ONE).content(dummyLinkJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void testGetExistingLink() throws Exception {
         final Link link = createDummyLink(BigInteger.ONE);
 
-        when(contentRoomService.findById(link.getId())).thenReturn(link);
+        when(contentRoomService.findLinkById(link.getId())).thenReturn(link);
 
         mockMvc.perform(get("/rooms/{roomId}/links//{id}", BigInteger.ONE, link.getId()))
                 .andExpect(status().isOk())

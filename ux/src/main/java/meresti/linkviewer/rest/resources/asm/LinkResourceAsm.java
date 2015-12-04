@@ -40,6 +40,6 @@ public class LinkResourceAsm extends ResourceAssemblerSupport<Link, LinkResource
     }
 
     public Link fromResource(final LinkResource resource) {
-        return new Link(resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
+        return new Link(resource.getLinkId(), resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
     }
 }

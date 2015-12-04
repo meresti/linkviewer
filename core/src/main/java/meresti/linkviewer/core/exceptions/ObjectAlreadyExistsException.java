@@ -20,29 +20,21 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.services;
+package meresti.linkviewer.core.exceptions;
 
-import meresti.linkviewer.core.entities.ContentRoom;
-import meresti.linkviewer.core.entities.Link;
+public class ObjectAlreadyExistsException extends RuntimeException {
+    public ObjectAlreadyExistsException() {
+    }
 
-import java.math.BigInteger;
-import java.util.List;
+    public ObjectAlreadyExistsException(final String message) {
+        super(message);
+    }
 
-public interface ContentRoomService {
+    public ObjectAlreadyExistsException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
-    ContentRoom createRoom(ContentRoom room);
-
-    ContentRoom deleteRoom(ContentRoom room);
-
-    List<ContentRoom> getRooms();
-
-    ContentRoom findById(BigInteger id);
-
-    Link addLinkToRoom(BigInteger roomId, Link link);
-
-    Link removeLinkFromRoom(BigInteger roomId, Link link);
-
-    List<Link> findLinks(BigInteger roomId, long startIndex, long pageSize);
-
-    Link findLinkById(BigInteger id);
+    public ObjectAlreadyExistsException(final Throwable cause) {
+        super(cause);
+    }
 }

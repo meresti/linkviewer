@@ -24,7 +24,8 @@ package meresti.linkviewer.rest.controllers;
 
 import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.Link;
-import meresti.linkviewer.core.exceptions.ObjectAlreadyExists;
+import meresti.linkviewer.core.exceptions.ObjectAlreadyExistsException;
+import meresti.linkviewer.core.exceptions.ObjectNotFoundException;
 import meresti.linkviewer.core.services.ContentRoomService;
 import meresti.linkviewer.rest.exceptions.ConflictException;
 import meresti.linkviewer.rest.exceptions.NotFoundException;
@@ -36,11 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -64,14 +61,14 @@ public class ContentRoomController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ContentRoomResource> createRoom(@RequestBody final ContentRoomResource sentResource) {
+    public ResponseEntity<ContentRoomResource> createRoom(@RequestBody final ContentRoomResource receivedResource) {
         ResponseEntity<ContentRoomResource> createdResource = null;
         try {
             final ContentRoomResourceAsm resourceAsm = new ContentRoomResourceAsm();
-            final ContentRoom sentContentRoom = resourceAsm.fromResource(sentResource);
-            final ContentRoom createdContentRoom = contentRoomService.createRoom(sentContentRoom);
+            final ContentRoom receivedContentRoom = resourceAsm.fromResource(receivedResource);
+            final ContentRoom createdContentRoom = contentRoomService.createRoom(receivedContentRoom);
             createdResource = new ResponseEntity<>(resourceAsm.toResource(createdContentRoom), HttpStatus.OK);
-        } catch (final ObjectAlreadyExists ex) {
+        } catch (final ObjectAlreadyExistsException ex) {
             throw new ConflictException(ex);
         }
 
@@ -79,10 +76,10 @@ public class ContentRoomController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity<ContentRoomResource> deleteRoom(@RequestBody final ContentRoomResource sentResource) {
+    public ResponseEntity<ContentRoomResource> deleteRoom(@RequestBody final ContentRoomResource receivedResource) {
         final ContentRoomResourceAsm resourceAsm = new ContentRoomResourceAsm();
-        final ContentRoom sentContentRoom = resourceAsm.fromResource(sentResource);
-        final ContentRoom createdContentRoom = contentRoomService.deleteRoom(sentContentRoom);
+        final ContentRoom receivedContentRoom = resourceAsm.fromResource(receivedResource);
+        final ContentRoom createdContentRoom = contentRoomService.deleteRoom(receivedContentRoom);
         return new ResponseEntity<>(resourceAsm.toResource(createdContentRoom), HttpStatus.OK);
     }
 
@@ -99,7 +96,7 @@ public class ContentRoomController {
     public LinkResource getLink(@PathVariable("roomId") final BigInteger roomId,
                                 @PathVariable("linkId") final BigInteger linkId) {
 
-        final Link link = contentRoomService.findById(linkId);
+        final Link link = contentRoomService.findLinkById(linkId);
         if (link == null) {
             throw new NotFoundException();
         }
@@ -109,8 +106,27 @@ public class ContentRoomController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/{roomId}/links")
     public LinkResource addLinkToRoom(@PathVariable("roomId") final BigInteger roomId,
-                                      @RequestBody final LinkResource sentLinkResource) {
+                                      @RequestBody final LinkResource receivedLinkResource) {
+        try {
+            final LinkResourceAsm linkResourceAsm = new LinkResourceAsm();
+            final Link receivedLink = linkResourceAsm.fromResource(receivedLinkResource);
+            final Link addedLink = contentRoomService.addLinkToRoom(roomId, receivedLink);
+            return linkResourceAsm.toResource(addedLink);
+        } catch (final ObjectNotFoundException e) {
+            throw new NotFoundException(e);
+        }
+    }
 
-        return sentLinkResource;
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{roomId}/links")
+    public LinkResource removeLinkFromRoom(@PathVariable("roomId") final BigInteger roomId,
+                                           @RequestBody final LinkResource receivedLinkResource) {
+        try {
+            final LinkResourceAsm linkResourceAsm = new LinkResourceAsm();
+            final Link receivedLink = linkResourceAsm.fromResource(receivedLinkResource);
+            final Link addedLink = contentRoomService.removeLinkFromRoom(roomId, receivedLink);
+            return linkResourceAsm.toResource(addedLink);
+        } catch (final ObjectNotFoundException e) {
+            throw new NotFoundException(e);
+        }
     }
 }

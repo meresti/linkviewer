@@ -34,7 +34,8 @@ public class Link {
     public Link() {
     }
 
-    public Link(String url, String imageUrl, String title, String description) {
+    public Link(final BigInteger id, final String url, final String imageUrl, final String title, final String description) {
+        this.id = id;
         this.url = url;
         this.imageUrl = imageUrl;
         this.title = title;
@@ -45,7 +46,7 @@ public class Link {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(final BigInteger id) {
         this.id = id;
     }
 
@@ -53,7 +54,7 @@ public class Link {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(final String url) {
         this.url = url;
     }
 
@@ -61,7 +62,7 @@ public class Link {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(final String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -69,7 +70,7 @@ public class Link {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -77,7 +78,7 @@ public class Link {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 }
