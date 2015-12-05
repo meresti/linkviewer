@@ -20,20 +20,9 @@
  * SOFTWARE.
  */
 
-import {HttpClient} from 'aurelia-http-client';
-
-export class ContentRoomService {
-    constructor() {
-        this.http = new HttpClient().configure(x=> {
-            x.withBaseUrl('/linkviewer');
-        });
-    }
-
-    addLinkToRoom(roomId, link) {
-        return this.http.post('/rooms/' + roomId + '/links', link);
-    }
-
-    removeLinkFromRoom(roomId, link) {
-        return this.http.delete('/rooms/' + roomId + '/links/' + link.linkId);
+export class Link {
+    constructor(data) {
+        Object.assign(this, data);
     }
 }
+

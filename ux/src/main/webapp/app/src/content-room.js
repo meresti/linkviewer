@@ -66,6 +66,16 @@ export class ContentRoom {
         this.contentRoomService.addLinkToRoom(this.currentRoom, link);
     }
 
+    removeLinkFromRoom(link) {
+        this.contentRoomService.removeLinkFromRoom(this.currentRoom, link)
+            .then(response=> {
+                let index = this.links.indexOf(link);
+                if (index > -1) {
+                    this.links.splice(index, 1);
+                }
+            });
+    }
+
     navigate() {
         this.rooter.navigate("users");
     }

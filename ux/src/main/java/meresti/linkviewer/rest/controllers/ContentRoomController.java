@@ -37,7 +37,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -75,11 +79,12 @@ public class ContentRoomController {
         return createdResource;
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity<ContentRoomResource> deleteRoom(@RequestBody final ContentRoomResource receivedResource) {
-        final ContentRoomResourceAsm resourceAsm = new ContentRoomResourceAsm();
-        final ContentRoom receivedContentRoom = resourceAsm.fromResource(receivedResource);
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{roomId}")
+    public ResponseEntity<ContentRoomResource> deleteRoom(@PathVariable("roomId") final BigInteger roomId) {
+
+        final ContentRoom receivedContentRoom = contentRoomService.findById(roomId);
         final ContentRoom createdContentRoom = contentRoomService.deleteRoom(receivedContentRoom);
+        final ContentRoomResourceAsm resourceAsm = new ContentRoomResourceAsm();
         return new ResponseEntity<>(resourceAsm.toResource(createdContentRoom), HttpStatus.OK);
     }
 
@@ -117,13 +122,12 @@ public class ContentRoomController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path = "/{roomId}/links")
-    public LinkResource removeLinkFromRoom(@PathVariable("roomId") final BigInteger roomId,
-                                           @RequestBody final LinkResource receivedLinkResource) {
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{roomId}/links/{linkId}")
+    public LinkResource removeLinkFromRoom(@PathVariable("roomId") final BigInteger roomId, @PathVariable("linkId") final BigInteger linkId) {
         try {
-            final LinkResourceAsm linkResourceAsm = new LinkResourceAsm();
-            final Link receivedLink = linkResourceAsm.fromResource(receivedLinkResource);
+            final Link receivedLink = contentRoomService.findLinkById(linkId);
             final Link addedLink = contentRoomService.removeLinkFromRoom(roomId, receivedLink);
+            final LinkResourceAsm linkResourceAsm = new LinkResourceAsm();
             return linkResourceAsm.toResource(addedLink);
         } catch (final ObjectNotFoundException e) {
             throw new NotFoundException(e);

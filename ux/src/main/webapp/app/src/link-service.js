@@ -31,7 +31,6 @@ export class LinkService {
         });
     }
 
-
     getLinks(roomId, currentIndex, batchSize) {
         return this.http.fetch('/linkviewer/rooms/' + roomId + '/links/' + currentIndex + '/' + batchSize)
             .then(response => response.json())

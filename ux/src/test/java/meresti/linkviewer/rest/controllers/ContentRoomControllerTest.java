@@ -39,12 +39,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigInteger;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.AdditionalAnswers.returnsSecondArg;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,9 +79,11 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testDeleteContentRoom() throws Exception {
+
+        when(contentRoomService.findById(BigInteger.ONE)).thenReturn(new ContentRoom(BigInteger.ONE, "dummy room", null));
         when(contentRoomService.deleteRoom(Matchers.any(ContentRoom.class))).thenAnswer(returnsFirstArg());
 
-        mockMvc.perform(delete("/rooms").content("{\"name\":\"dummy room\"}").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/rooms/{roomId}", BigInteger.ONE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("dummy room")));
     }
@@ -143,8 +149,10 @@ public class ContentRoomControllerTest {
     public void testRemoveLinkFromRoom() throws Exception {
         when(contentRoomService.removeLinkFromRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArg());
 
-        final String dummyLinkJson = "{\"linkId\":1, \"url\":\"http://some.url\",\"title\":\"A dummy link\"}";
-        mockMvc.perform(delete("/rooms/{roomId}/links", BigInteger.ONE).content(dummyLinkJson).contentType(MediaType.APPLICATION_JSON))
+        when(contentRoomService.findLinkById(BigInteger.ONE)).thenReturn(createDummyLink(BigInteger.ONE));
+        when(contentRoomService.removeLinkFromRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArg());
+
+        mockMvc.perform(delete("/rooms/{roomId}/links/{linkId}", BigInteger.ONE, BigInteger.ONE))
                 .andExpect(status().isOk());
     }
 
