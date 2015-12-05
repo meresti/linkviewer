@@ -40,6 +40,10 @@ export class ContentRoom {
     }
 
     activate() {
+        return this._getNextBatch();
+    }
+
+    _getNextBatch() {
         return this.linkService.getLinks(this.currentRoom, this.currentIndex, this.batchSize).then(response=> {
             this._addLinks(response);
         });
@@ -54,9 +58,7 @@ export class ContentRoom {
 
     handleScrollEvent(event) {
         if (event.target.scrollTop >= event.target.scrollHeight - event.target.offsetHeight - 400) {
-            this.linkService.getLinks(this.currentIndex, this.batchSize).then(response=> {
-                this._addLinks(response);
-            });
+            this._getNextBatch();
         }
     }
 

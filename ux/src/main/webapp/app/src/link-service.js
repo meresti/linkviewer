@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import {Link} from 'link.js'
 import {HttpClient} from 'aurelia-fetch-client';
 import 'fetch';
 
@@ -33,6 +34,7 @@ export class LinkService {
 
     getLinks(roomId, currentIndex, batchSize) {
         return this.http.fetch('/linkviewer/rooms/' + roomId + '/links/' + currentIndex + '/' + batchSize)
-            .then(response => response.json());
+            .then(response => response.json())
+            .then(links => links.map(link => new Link(link)));
     }
 }

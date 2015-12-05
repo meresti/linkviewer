@@ -32,7 +32,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
@@ -132,10 +136,9 @@ public class ContentRoomServiceImpl implements ContentRoomService {
                     "http://img.scoop.it/LGgZBIqib2AlhMbUiqb9P4XXXL4j3HpexhjNOf_P3YmryPKwJ94QGRtDb3Sbc6KY",
                     "Top Cities and Other Demographics for Data Scie...",
                     "This analysis shows the distribution of data scientists per country, city, gender and company. It is based on Data Science Central (DSC) member database, only…"),
-            new Link(new BigInteger("19"),
-                    "http://www.forbes.com/fdc/welcome_mjx_mobile.html", null,
-                    "Welcome to Forbes",
-                    "Forbes Continue » Thought Of The Day ADVERTISEMENT "),
+            new Link(new BigInteger("19"), "http://www.forbes.com/fdc/welcome_mjx_mobile.html", null,
+                     "Welcome to Forbes",
+                     "Forbes Continue » Thought Of The Day ADVERTISEMENT "),
             new Link(new BigInteger("20"),
                     "http://www.slate.com/blogs/xx_factor/2014/09/02/jennifer_lawrence_and_other_celebrity_hacking_victims_should_not_have_to.html",
                     "http://www.slate.com/content/dam/slate/blogs/xx_factor/2014/09/02/jennifer_lawrence_and_other_celebrity_hacking_victims_should_not_have_to/162636595-jennifer-lawrence-carrying-her-oscar-for-best-actress.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpeg",
@@ -202,10 +205,9 @@ public class ContentRoomServiceImpl implements ContentRoomService {
                     "How Kim’s Half-Sister Kylie Became the Most Influential Kardashian",
                     "The Kardashian sisters have been asking 17-year-old Kylie Jenner for fashion advice for at least two or three years"),
             new Link(new BigInteger("33"),
-                    "http://analytical-solution.com/2015/02/09/honored-to-be-a-women-in-data/",
-                    "Data Science is real » Honored to be a Women In Data",
-                    null,
-                    null),
+                     "http://analytical-solution.com/2015/02/09/honored-to-be-a-women-in-data/",
+                     null, "Data Science is real » Honored to be a Women In Data",
+                     null),
             new Link(new BigInteger("34"),
                     "http://www.bbc.com/news/world-us-canada-32856926",
                     "http://ichef.bbci.co.uk/news/1024/media/images/83183000/jpg/_83183617_fe5168e7-d14e-416e-9bea-255cf17dc3b6.jpg",

@@ -6,7 +6,8 @@
     <div class="cards clearfix" scroll.trigger="handleScrollEvent($event) & throttle:250">
         <div class="card2" repeat.for="link of links">
             <a target="_blank" href.bind="link.url">
-                <div class="card-image" css="background-image: url(${link.imageUrl});"></div>
+                <div class="card-image"
+                     css="background-image: url(${link.imageUrl ? link.imageUrl: 'images/card_default_image.png'});"></div>
                 <div class="card-text">
                     <div class="card-title">${link.title}</div>
                     <div class="card-description">${link.description}</div>
