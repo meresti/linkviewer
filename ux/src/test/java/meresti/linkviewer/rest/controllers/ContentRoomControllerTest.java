@@ -39,16 +39,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigInteger;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.AdditionalAnswers.returnsSecondArg;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,9 +76,7 @@ public class ContentRoomControllerTest {
     @Test
     public void testDeleteContentRoom() throws Exception {
 
-        when(contentRoomService.findById(BigInteger.ONE)).thenReturn(new ContentRoom(BigInteger.ONE, "dummy room", null));
-        when(contentRoomService.deleteRoom(Matchers.any(ContentRoom.class))).thenAnswer(returnsFirstArg());
-
+        when(contentRoomService.deleteRoom(BigInteger.ONE)).thenReturn(new ContentRoom(BigInteger.ONE, "dummy room"));
         mockMvc.perform(delete("/rooms/{roomId}", BigInteger.ONE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("dummy room")));
@@ -90,7 +84,7 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testGetContentRooms() throws Exception {
-        final ContentRoom contentRoom = new ContentRoom(BigInteger.ONE, "dummy room", null);
+        final ContentRoom contentRoom = new ContentRoom(BigInteger.ONE, "dummy room");
         when(contentRoomService.getRooms()).thenReturn(Collections.singletonList(contentRoom));
 
         mockMvc.perform(get("/rooms"))
@@ -104,11 +98,11 @@ public class ContentRoomControllerTest {
     public void testGetLinks() throws Exception {
         final Link link = createDummyLink(BigInteger.ONE);
 
-        when(contentRoomService.findLinks(BigInteger.ONE, 0L, 10L)).thenReturn(Collections.singletonList(link));
-        when(contentRoomService.findLinks(BigInteger.ONE, 10L, 10L)).thenReturn(Collections.emptyList());
-        when(contentRoomService.findLinks(BigInteger.TEN, 0L, 10L)).thenReturn(Collections.emptyList());
+        when(contentRoomService.findLinks(BigInteger.ONE, 0, 10)).thenReturn(Collections.singletonList(link));
+        when(contentRoomService.findLinks(BigInteger.ONE, 1, 10)).thenReturn(Collections.emptyList());
+        when(contentRoomService.findLinks(BigInteger.TEN, 0, 10)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/rooms/{roomId}/links/{startIndex}/{pageSize}", BigInteger.ONE, 0L, 10L))
+        mockMvc.perform(get("/rooms/{roomId}/links/{page}/{size}", BigInteger.ONE, 0, 10))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].url", is(link.getUrl())))
@@ -116,12 +110,12 @@ public class ContentRoomControllerTest {
                 .andExpect(jsonPath("$[0].description", is(link.getDescription())))
                 .andExpect(jsonPath("$[0].imageUrl", is(link.getImageUrl())));
 
-        mockMvc.perform(get("/rooms/{roomId}/links/{startIndex}/{pageSize}", BigInteger.ONE, 10L, 10L))
+        mockMvc.perform(get("/rooms/{roomId}/links/{page}/{size}", BigInteger.ONE, 1, 10))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(empty())));
 
 
-        mockMvc.perform(get("/rooms/{roomId}/links/{startIndex}/{pageSize}", BigInteger.TEN, 0L, 10L))
+        mockMvc.perform(get("/rooms/{roomId}/links/{page}/{size}", BigInteger.TEN, 0, 10))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(empty())));
 
@@ -147,10 +141,7 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testRemoveLinkFromRoom() throws Exception {
-        when(contentRoomService.removeLinkFromRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArg());
-
-        when(contentRoomService.findLinkById(BigInteger.ONE)).thenReturn(createDummyLink(BigInteger.ONE));
-        when(contentRoomService.removeLinkFromRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArg());
+        when(contentRoomService.removeLinkFromRoom(BigInteger.ONE, BigInteger.ONE)).thenReturn(createDummyLink(BigInteger.ONE));
 
         mockMvc.perform(delete("/rooms/{roomId}/links/{linkId}", BigInteger.ONE, BigInteger.ONE))
                 .andExpect(status().isOk());

@@ -20,26 +20,53 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources.asm;
+package meresti.linkviewer.core.entities;
 
-import meresti.linkviewer.core.entities.ContentRoom;
-import meresti.linkviewer.rest.controllers.ContentRoomController;
-import meresti.linkviewer.rest.resources.ContentRoomResource;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public class ContentRoomResourceAsm extends ResourceAssemblerSupport<ContentRoom, ContentRoomResource> {
+import java.math.BigInteger;
 
-    public ContentRoomResourceAsm() {
-        super(ContentRoomController.class, ContentRoomResource.class);
+@Document(collection = "ContentRoomLink")
+public class ContentRoomLink {
+
+    @Id
+    private BigInteger id;
+
+    private BigInteger roomId;
+
+    private BigInteger linkId;
+
+    public ContentRoomLink() {
     }
 
-    @Override
-    public ContentRoomResource toResource(final ContentRoom entity) {
-        final ContentRoomResource resource = new ContentRoomResource(entity.getId(), entity.getName());
-        return resource;
+    public ContentRoomLink(final BigInteger id, final BigInteger roomId, final BigInteger linkId) {
+        this.id = id;
+        this.roomId = roomId;
+        this.linkId = linkId;
     }
 
-    public ContentRoom fromResource(final ContentRoomResource sentResource) {
-        return new ContentRoom(sentResource.getRoomId(), sentResource.getName());
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(final BigInteger id) {
+        this.id = id;
+    }
+
+    public BigInteger getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(final BigInteger roomId) {
+        this.roomId = roomId;
+    }
+
+    public BigInteger getLinkId() {
+        return linkId;
+    }
+
+    public void setLinkId(final BigInteger linkId) {
+        this.linkId = linkId;
     }
 }

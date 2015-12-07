@@ -22,13 +22,23 @@
 
 package meresti.linkviewer.core.entities;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.math.BigInteger;
 
+@Document(collection = "Link")
 public class Link {
+
+    @Id
     private BigInteger id;
+
     private String url;
+
     private String imageUrl;
+
     private String title;
+
     private String description;
 
     public Link() {

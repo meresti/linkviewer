@@ -35,13 +35,10 @@ import meresti.linkviewer.rest.resources.asm.ContentRoomResourceAsm;
 import meresti.linkviewer.rest.resources.asm.LinkResourceAsm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -82,17 +79,16 @@ public class ContentRoomController {
     @RequestMapping(method = RequestMethod.DELETE, path = "/{roomId}")
     public ResponseEntity<ContentRoomResource> deleteRoom(@PathVariable("roomId") final BigInteger roomId) {
 
-        final ContentRoom receivedContentRoom = contentRoomService.findById(roomId);
-        final ContentRoom createdContentRoom = contentRoomService.deleteRoom(receivedContentRoom);
-        final ContentRoomResourceAsm resourceAsm = new ContentRoomResourceAsm();
-        return new ResponseEntity<>(resourceAsm.toResource(createdContentRoom), HttpStatus.OK);
+        final ContentRoom contentRoom = contentRoomService.deleteRoom(roomId);
+        final ResourceAssembler<ContentRoom, ContentRoomResource> resourceAsm = new ContentRoomResourceAsm();
+        return new ResponseEntity<>(resourceAsm.toResource(contentRoom), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{roomId}/links/{startIndex}/{pageSize}")
+    @RequestMapping(method = RequestMethod.GET, path = "/{roomId}/links/{page}/{size}")
     public ResponseEntity<List<LinkResource>> getLinks(@PathVariable("roomId") final BigInteger roomId,
-                                                       @PathVariable("startIndex") final long startIndex,
-                                                       @PathVariable("pageSize") final long pageSize) {
-        final List<Link> links = contentRoomService.findLinks(roomId, startIndex, pageSize);
+                                                       @PathVariable("page") final int page,
+                                                       @PathVariable("size") final int size) {
+        final List<Link> links = contentRoomService.findLinks(roomId, page, size);
         final List<LinkResource> resources = new LinkResourceAsm().toResources(links);
         return new ResponseEntity<>(resources, HttpStatus.OK);
     }
@@ -125,9 +121,8 @@ public class ContentRoomController {
     @RequestMapping(method = RequestMethod.DELETE, path = "/{roomId}/links/{linkId}")
     public LinkResource removeLinkFromRoom(@PathVariable("roomId") final BigInteger roomId, @PathVariable("linkId") final BigInteger linkId) {
         try {
-            final Link receivedLink = contentRoomService.findLinkById(linkId);
-            final Link addedLink = contentRoomService.removeLinkFromRoom(roomId, receivedLink);
-            final LinkResourceAsm linkResourceAsm = new LinkResourceAsm();
+            final Link addedLink = contentRoomService.removeLinkFromRoom(roomId, linkId);
+            final ResourceAssemblerSupport<Link, LinkResource> linkResourceAsm = new LinkResourceAsm();
             return linkResourceAsm.toResource(addedLink);
         } catch (final ObjectNotFoundException e) {
             throw new NotFoundException(e);

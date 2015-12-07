@@ -20,26 +20,15 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources.asm;
+package meresti.linkviewer.core.repositories;
 
-import meresti.linkviewer.core.entities.ContentRoom;
-import meresti.linkviewer.rest.controllers.ContentRoomController;
-import meresti.linkviewer.rest.resources.ContentRoomResource;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import meresti.linkviewer.core.entities.ContentRoomLink;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public class ContentRoomResourceAsm extends ResourceAssemblerSupport<ContentRoom, ContentRoomResource> {
+import java.math.BigInteger;
 
-    public ContentRoomResourceAsm() {
-        super(ContentRoomController.class, ContentRoomResource.class);
-    }
+public interface ContentRoomLinkRepository extends MongoRepository<ContentRoomLink, BigInteger> {
 
-    @Override
-    public ContentRoomResource toResource(final ContentRoom entity) {
-        final ContentRoomResource resource = new ContentRoomResource(entity.getId(), entity.getName());
-        return resource;
-    }
+    ContentRoomLink findByRoomIdAndLinkId(BigInteger roomId, BigInteger linkId);
 
-    public ContentRoom fromResource(final ContentRoomResource sentResource) {
-        return new ContentRoom(sentResource.getRoomId(), sentResource.getName());
-    }
 }

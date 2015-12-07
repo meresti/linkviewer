@@ -32,6 +32,8 @@ public interface ContentRoomService {
 
     ContentRoom createRoom(ContentRoom room);
 
+    ContentRoom deleteRoom(BigInteger id);
+
     ContentRoom deleteRoom(ContentRoom room);
 
     List<ContentRoom> getRooms();
@@ -40,9 +42,9 @@ public interface ContentRoomService {
 
     Link addLinkToRoom(BigInteger roomId, Link link);
 
-    Link removeLinkFromRoom(BigInteger roomId, Link link);
+    Link removeLinkFromRoom(BigInteger roomId, BigInteger linkId);
 
-    List<Link> findLinks(BigInteger roomId, long startIndex, long pageSize);
+    List<Link> findLinks(BigInteger roomId, int page, int size);
 
     Link findLinkById(BigInteger id);
 }

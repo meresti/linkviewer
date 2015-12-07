@@ -26,19 +26,21 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
-import java.util.List;
 
 @Document(collection = "ContentRoom")
 public class ContentRoom {
+
     @Id
     private BigInteger id;
-    private String name;
-    private List<BigInteger> links;
 
-    public ContentRoom(final BigInteger id, final String name, final List<BigInteger> links) {
+    private String name;
+
+    public ContentRoom() {
+    }
+
+    public ContentRoom(final BigInteger id, final String name) {
         this.id = id;
         this.name = name;
-        this.links = links;
     }
 
     public BigInteger getId() {
@@ -55,13 +57,5 @@ public class ContentRoom {
 
     public void setName(final String name) {
         this.name = name;
-    }
-
-    public List<BigInteger> getLinks() {
-        return links;
-    }
-
-    public void setLinks(final List<BigInteger> links) {
-        this.links = links;
     }
 }
