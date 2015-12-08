@@ -32,7 +32,8 @@ import meresti.linkviewer.core.spring.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -40,7 +41,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@Configuration
+@Component
 public class StoreInitializer {
 
     @Autowired
@@ -60,6 +61,7 @@ public class StoreInitializer {
         storeInitializer.initStore();
     }
 
+    @Transactional
     private void initStore() {
         final List<Link> savedLinks = linkRepository.save(DummyDataCollection.LINKS);
 

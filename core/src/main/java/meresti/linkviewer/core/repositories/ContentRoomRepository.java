@@ -26,16 +26,7 @@ import meresti.linkviewer.core.entities.ContentRoom;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.math.BigInteger;
-import java.util.List;
 
 public interface ContentRoomRepository extends MongoRepository<ContentRoom, BigInteger> {
 
-    @Override
-    ContentRoom findOne(BigInteger id);
-
-    @Override
-    <S extends ContentRoom> S save(S entity);
-
-    @Override
-    <S extends ContentRoom> List<S> save(Iterable<S> entites);
 }

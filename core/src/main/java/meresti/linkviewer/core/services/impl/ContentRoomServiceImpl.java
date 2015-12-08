@@ -119,7 +119,7 @@ public class ContentRoomServiceImpl implements ContentRoomService {
     @Override
     public List<Link> findLinks(final BigInteger roomId, final int page, final int size) {
 
-        final Page<ContentRoomLink> contentRoomLinkPage = contentRoomLinkRepository.findAll(new PageRequest(page, size));
+        final Page<ContentRoomLink> contentRoomLinkPage = contentRoomLinkRepository.findByRoomId(roomId, new PageRequest(page, size));
         final List<ContentRoomLink> contentRoomLinks = contentRoomLinkPage.getContent();
         final List<BigInteger> linkIds = contentRoomLinks.stream().map(ContentRoomLink::getLinkId).collect(Collectors.toList());
         final Iterable<Link> links = linkRepository.findAll(linkIds);
