@@ -20,14 +20,25 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.repositories;
+package meresti.linkviewer.core.entities;
 
-import meresti.linkviewer.core.entities.ContentRoomLink;
-import org.springframework.data.mongodb.repository.MongoRepository;
+public enum Relevance {
+    ABSOLUTELY_IRRELEVANT(-3),
+    MOSTLY_IRRELEVANT(-2),
+    SOMEWHAT_IRRELEVANT(-1),
+    NEITHER_IRRELEVANT_NOR_RELEVANT(0),
+    SOMEWHAT_RELEVANT(1),
+    MOSTLY_RELEVANT(2),
+    ABSOLUTELY_RELEVANT(3);
 
-import java.math.BigInteger;
+    private final int weight;
 
-public interface ContentRoomLinkRepository extends MongoRepository<ContentRoomLink, BigInteger>, ContentRoomLinkRepositoryCustom {
+    Relevance(final int weight) {
 
-    ContentRoomLink findByRoomIdAndLinkId(BigInteger roomId, BigInteger linkId);
+        this.weight = weight;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
 }

@@ -22,10 +22,14 @@
 
 package meresti.linkviewer.core.entities;
 
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.EnumMap;
+import java.util.Map;
 
 @Document(collection = "ContentRoomLink")
 public class ContentRoomLink {
@@ -36,6 +40,12 @@ public class ContentRoomLink {
     private BigInteger roomId;
 
     private BigInteger linkId;
+
+    private @Nullable Relevance relevance;
+
+    private @Nullable Map<Relevance, Long> relevanceCounts = new EnumMap<>(Relevance.class);
+
+    private BigDecimal relevanceRate = BigDecimal.ZERO;
 
     public ContentRoomLink() {
     }
@@ -68,5 +78,29 @@ public class ContentRoomLink {
 
     public void setLinkId(final BigInteger linkId) {
         this.linkId = linkId;
+    }
+
+    public Relevance getRelevance() {
+        return relevance;
+    }
+
+    public void setRelevance(final @Nullable Relevance relevance) {
+        this.relevance = relevance;
+    }
+
+    public @Nullable Map<Relevance, Long> getRelevanceCounts() {
+        return relevanceCounts;
+    }
+
+    public void setRelevanceCounts(final @Nullable Map<Relevance, Long> relevanceCounts) {
+        this.relevanceCounts = relevanceCounts;
+    }
+
+    public BigDecimal getRelevanceRate() {
+        return relevanceRate;
+    }
+
+    public void setRelevanceRate(final BigDecimal relevanceRate) {
+        this.relevanceRate = relevanceRate;
     }
 }

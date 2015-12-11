@@ -95,6 +95,7 @@ configure(allprojects) { project ->
     dependencies {
         compile 'org.springframework:spring-context:4.2.3.RELEASE'
         compile 'log4j:log4j:1.2.17'
+        compile 'org.jetbrains:annotations:15.0'
 
         testCompile 'junit:junit:4.12'
         testCompile 'org.hamcrest:hamcrest-core:1.3'

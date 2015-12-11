@@ -23,11 +23,12 @@
 package meresti.linkviewer.core.repositories;
 
 import meresti.linkviewer.core.entities.ContentRoomLink;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 
-public interface ContentRoomLinkRepository extends MongoRepository<ContentRoomLink, BigInteger>, ContentRoomLinkRepositoryCustom {
+interface ContentRoomLinkRepositoryCustom {
 
-    ContentRoomLink findByRoomIdAndLinkId(BigInteger roomId, BigInteger linkId);
+    Page<ContentRoomLink> findByRoomId(BigInteger roomId, Pageable pageable);
 }

@@ -23,11 +23,28 @@
 package meresti.linkviewer.core.repositories;
 
 import meresti.linkviewer.core.entities.ContentRoomLink;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoOperations;
 
 import java.math.BigInteger;
+import java.util.List;
 
-public interface ContentRoomLinkRepository extends MongoRepository<ContentRoomLink, BigInteger>, ContentRoomLinkRepositoryCustom {
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
-    ContentRoomLink findByRoomIdAndLinkId(BigInteger roomId, BigInteger linkId);
+class ContentRoomLinkRepositoryImpl implements ContentRoomLinkRepositoryCustom {
+
+    @Autowired
+    private MongoOperations mongoOperations;
+
+    @Override
+    public Page<ContentRoomLink> findByRoomId(final BigInteger roomId, final Pageable pageable) {
+        final Sort sort = new Sort(Sort.Direction.DESC, "relevanceRate");
+        final List<ContentRoomLink> contentRoomLinks = mongoOperations.find(query(where("roomId").is(roomId)).with(sort).with(pageable), ContentRoomLink.class);
+        return new PageImpl<>(contentRoomLinks);
+    }
 }

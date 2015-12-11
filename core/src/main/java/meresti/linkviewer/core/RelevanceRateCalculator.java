@@ -20,14 +20,28 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.repositories;
+package meresti.linkviewer.core;
 
-import meresti.linkviewer.core.entities.ContentRoomLink;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import meresti.linkviewer.core.entities.Relevance;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.Map;
 
-public interface ContentRoomLinkRepository extends MongoRepository<ContentRoomLink, BigInteger>, ContentRoomLinkRepositoryCustom {
+public class RelevanceRateCalculator {
 
-    ContentRoomLink findByRoomIdAndLinkId(BigInteger roomId, BigInteger linkId);
+    public BigDecimal calculateFrom(final Map<Relevance, Long> relevanceCounts) {
+        BigInteger relevanceRateCount = BigInteger.ZERO;
+        BigDecimal relevanceRateSum = BigDecimal.ZERO;
+        for (final Map.Entry<Relevance, Long> entry : relevanceCounts.entrySet()) {
+            final Relevance relevance = entry.getKey();
+            final Long count = entry.getValue();
+            relevanceRateCount = relevanceRateCount.add(BigInteger.valueOf(count));
+            relevanceRateSum = relevanceRateSum.add(BigDecimal.valueOf(count * (long) relevance.getWeight()));
+
+        }
+        return BigInteger.ZERO.equals(relevanceRateCount) ? BigDecimal.ZERO : relevanceRateSum.divide(new BigDecimal(relevanceRateCount), new MathContext(2, RoundingMode.HALF_DOWN));
+    }
 }

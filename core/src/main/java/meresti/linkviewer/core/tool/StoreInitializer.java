@@ -22,9 +22,11 @@
 
 package meresti.linkviewer.core.tool;
 
+import meresti.linkviewer.core.RelevanceRateCalculator;
 import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.core.entities.Link;
+import meresti.linkviewer.core.entities.Relevance;
 import meresti.linkviewer.core.repositories.ContentRoomLinkRepository;
 import meresti.linkviewer.core.repositories.ContentRoomRepository;
 import meresti.linkviewer.core.repositories.LinkRepository;
@@ -32,17 +34,24 @@ import meresti.linkviewer.core.spring.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 @Component
 public class StoreInitializer {
+
+    @Autowired
+    private MongoDbFactory mongoDbFactory;
 
     @Autowired
     private ContentRoomRepository contentRoomRepository;
@@ -58,7 +67,12 @@ public class StoreInitializer {
         context.registerShutdownHook();
 
         final StoreInitializer storeInitializer = context.getBean(StoreInitializer.class);
+        storeInitializer.dropStore();
         storeInitializer.initStore();
+    }
+
+    private void dropStore() {
+        mongoDbFactory.getDb().dropDatabase();
     }
 
     @Transactional
@@ -79,11 +93,68 @@ public class StoreInitializer {
             final int toIndex = isLastRoom(contentRoomCount, roomIndex) ? savedLinks.size() : random.nextInt(savedLinks.size() - fromIndex) + fromIndex;
             final List<BigInteger> linkIdSublist = linkIds.subList(fromIndex, toIndex);
 
-            final List<ContentRoomLink> contentRoomLinks = linkIdSublist.stream().map(linkId -> new ContentRoomLink(null, roomId, linkId)).collect(Collectors.toList());
+            final List<ContentRoomLink> contentRoomLinks = linkIdSublist.stream().map(linkId -> createContentRoomLink(roomId, linkId, random)).collect(Collectors.toList());
             contentRoomLinkRepository.save(contentRoomLinks);
 
             fromIndex = toIndex;
         }
+    }
+
+    private static ContentRoomLink createContentRoomLink(final BigInteger roomId, final BigInteger linkId, final Random random) {
+        final ContentRoomLink contentRoomLink = new ContentRoomLink(null, roomId, linkId);
+        contentRoomLink.setRelevance(getPersonalOpinionatedRelevance(random));
+        final Map<Relevance, Long> relevanceCounts = getRelevanceCounts(random);
+        if (relevanceCounts != null) {
+            contentRoomLink.setRelevanceCounts(relevanceCounts);
+
+            final BigDecimal relevanceRate = new RelevanceRateCalculator().calculateFrom(relevanceCounts);
+            contentRoomLink.setRelevanceRate(relevanceRate);
+        }
+
+        return contentRoomLink;
+    }
+
+    private static Relevance getPersonalOpinionatedRelevance(final Random random) {
+        final Relevance relevance;
+        switch (random.nextInt(50)) {
+            case 1:
+                relevance = Relevance.ABSOLUTELY_IRRELEVANT;
+                break;
+            case 2:
+                relevance = Relevance.MOSTLY_IRRELEVANT;
+                break;
+            case 3:
+                relevance = Relevance.SOMEWHAT_IRRELEVANT;
+                break;
+            case 4:
+                relevance = Relevance.NEITHER_IRRELEVANT_NOR_RELEVANT;
+                break;
+            case 5:
+                relevance = Relevance.SOMEWHAT_RELEVANT;
+                break;
+            case 6:
+                relevance = Relevance.MOSTLY_RELEVANT;
+                break;
+            case 7:
+                relevance = Relevance.ABSOLUTELY_RELEVANT;
+                break;
+            default:
+                relevance = null;
+        }
+
+        return relevance;
+    }
+
+    private static Map<Relevance, Long> getRelevanceCounts(final Random random) {
+        final Map<Relevance, Long> counts = new EnumMap<>(Relevance.class);
+        for (final Relevance relevance : Relevance.values()) {
+            final int randomValue = random.nextInt(500);
+            if (randomValue < 50) {
+                counts.put(relevance, (long) randomValue);
+            }
+        }
+
+        return counts.isEmpty() ? null : counts;
     }
 
     private static boolean isLastRoom(final int count, final int index) {
