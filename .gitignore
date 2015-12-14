@@ -2,6 +2,8 @@
 .gradle
 */build
 
+core/src/main/generated
+
 ux/src/main/webapp/app/bower_components
 ux/src/main/webapp/app/build/reports
 ux/src/main/webapp/app/coverage

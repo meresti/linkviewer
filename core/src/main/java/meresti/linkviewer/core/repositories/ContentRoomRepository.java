@@ -24,9 +24,10 @@ package meresti.linkviewer.core.repositories;
 
 import meresti.linkviewer.core.entities.ContentRoom;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 import java.math.BigInteger;
 
-public interface ContentRoomRepository extends MongoRepository<ContentRoom, BigInteger> {
+public interface ContentRoomRepository extends MongoRepository<ContentRoom, BigInteger>, QueryDslPredicateExecutor<ContentRoom> {
 
 }

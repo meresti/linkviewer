@@ -2,7 +2,11 @@ group 'linkviewer'
 version '1.0-SNAPSHOT'
 
 dependencies {
+    compile 'org.springframework.data:spring-data-commons:1.11.1.RELEASE'
+    compile 'org.springframework.data:spring-data-commons-core:1.4.1.RELEASE'
     compile 'org.springframework.data:spring-data-mongodb:1.8.1.RELEASE'
+
+    compile 'com.mysema.querydsl:querydsl-mongodb:3.7.0'
 }
 
 task recreatMongoDb(type: JavaExec, description: '[Mongo] Recreates the Mongo DB.') {
@@ -10,4 +14,19 @@ task recreatMongoDb(type: JavaExec, description: '[Mongo] Recreates the Mongo DB
 
     main = 'meresti.linkviewer.core.tool.StoreInitializer'
     classpath = sourceSets.main.runtimeClasspath
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+querydsl {
+    library = "com.mysema.querydsl:querydsl-apt:3.7.0"
+    querydslSourcesDir = "src/main/generated/java"
+
+    springDataMongo = true
+}
+
+idea {
+    module {
+        sourceDirs += file('src/main/generated/java')
+    }
 }

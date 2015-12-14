@@ -13,10 +13,12 @@ buildscript {
         classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.3'
         classpath "com.moowork.gradle:gradle-node-plugin:0.11"
         classpath 'com.moowork.gradle:gradle-gulp-plugin:0.11'
+        classpath 'com.ewerk.gradle.plugins:querydsl-plugin:1.0.3'
     }
 }
 
 project(':core') {
+    apply plugin: 'com.ewerk.gradle.plugins.querydsl'
 }
 
 project(':ux') {
