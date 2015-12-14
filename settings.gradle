@@ -1,4 +1,4 @@
 rootProject.name = 'linkviewer'
 include 'core'
+include 'tools'
 include 'ux'
-

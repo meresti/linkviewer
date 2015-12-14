@@ -9,15 +9,6 @@ dependencies {
     compile 'com.mysema.querydsl:querydsl-mongodb:3.7.0'
 }
 
-task recreatMongoDb(type: JavaExec, description: '[Mongo] Recreates the Mongo DB.') {
-    dependsOn compileJava, processResources
-
-    main = 'meresti.linkviewer.core.tool.StoreInitializer'
-    classpath = sourceSets.main.runtimeClasspath
-}
-
-compileJava.options.encoding = 'UTF-8'
-
 querydsl {
     library = "com.mysema.querydsl:querydsl-apt:3.7.0"
     querydslSourcesDir = "src/main/generated/java"

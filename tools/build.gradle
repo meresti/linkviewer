@@ -1,0 +1,12 @@
+group 'linkviewer'
+version '1.0-SNAPSHOT'
+
+dependencies {
+}
+
+task recreatMongoDb(type: JavaExec, description: '[Mongo] Recreates the Mongo DB.') {
+    dependsOn compileJava, processResources
+
+    main = 'meresti.linkviewer.core.tool.StoreInitializer'
+    classpath = sourceSets.main.runtimeClasspath
+}
