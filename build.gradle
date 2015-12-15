@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.3'
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
         classpath "com.moowork.gradle:gradle-node-plugin:0.11"
         classpath 'com.moowork.gradle:gradle-gulp-plugin:0.11'
         classpath 'com.ewerk.gradle.plugins:querydsl-plugin:1.0.3'
@@ -104,7 +104,8 @@ configure(allprojects) { project ->
 
     dependencies {
         compile 'org.springframework:spring-context:4.2.3.RELEASE'
-        compile 'log4j:log4j:1.2.17'
+        compile 'org.apache.logging.log4j:log4j-core:2.5'
+        compile 'org.apache.logging.log4j:log4j-api:2.5'
         compile 'org.jetbrains:annotations:15.0'
 
         testCompile 'junit:junit:4.12'

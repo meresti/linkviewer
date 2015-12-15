@@ -24,23 +24,15 @@ package meresti.linkviewer.core.spring;
 
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.util.Log4jConfigurer;
-
-import javax.annotation.PostConstruct;
-import java.io.FileNotFoundException;
 
 @Configuration
 @ComponentScan("meresti.linkviewer.core.services.impl")
 @PropertySource("classpath:/meresti/linkviewer/spring/app.properties")
 @Import(RepositoryConfig.class)
 public class AppConfig {
-    @PostConstruct
-    public void initLog4j() throws FileNotFoundException {
-        Log4jConfigurer.initLogging("classpath:log4j.xml");
-    }
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigIn() {
+    public PropertySourcesPlaceholderConfigurer propertyConfigIn() {
         return new PropertySourcesPlaceholderConfigurer();
     }
 }

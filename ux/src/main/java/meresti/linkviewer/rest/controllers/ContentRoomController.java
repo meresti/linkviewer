@@ -33,6 +33,8 @@ import meresti.linkviewer.rest.resources.ContentRoomResource;
 import meresti.linkviewer.rest.resources.LinkResource;
 import meresti.linkviewer.rest.resources.asm.ContentRoomResourceAsm;
 import meresti.linkviewer.rest.resources.asm.LinkResourceAsm;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
@@ -47,15 +49,19 @@ import java.util.List;
 @RequestMapping("/rooms")
 public class ContentRoomController {
 
+    private static final Logger LOGGER = LogManager.getLogger(ContentRoomController.class);
+
     private final ContentRoomService contentRoomService;
 
     @Autowired
     public ContentRoomController(final ContentRoomService contentRoomService) {
+        LOGGER.info("Creating ContentRoomController ...");
         this.contentRoomService = contentRoomService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<ContentRoomResource>> getRooms() {
+        LOGGER.info("ContentRoomController.getRooms");
         final List<ContentRoom> rooms = contentRoomService.getRooms();
         final List<ContentRoomResource> resources = new ContentRoomResourceAsm().toResources(rooms);
         return new ResponseEntity<>(resources, HttpStatus.OK);
