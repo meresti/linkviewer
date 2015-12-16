@@ -1,6 +1,26 @@
 group 'linkviewer'
 version '1.0-SNAPSHOT'
 
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
+        classpath "com.moowork.gradle:gradle-node-plugin:0.11"
+        classpath 'com.moowork.gradle:gradle-gulp-plugin:0.11'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'
+apply plugin: 'com.moowork.node'
+apply plugin: 'com.moowork.gulp'
+
+def tomcatVersion = '7.0.59'
+
 dependencies {
     compile 'org.springframework:spring-webmvc:4.2.3.RELEASE'
     compile 'org.springframework.hateoas:spring-hateoas:0.19.0.RELEASE'
@@ -12,4 +32,44 @@ dependencies {
 
     testCompile 'org.springframework:spring-test:4.2.3.RELEASE'
     testCompile 'com.jayway.jsonpath:json-path:2.1.0'
+
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+}
+
+node {
+    // Version of node to use.
+    version = '5.1.1'
+
+    distBaseUrl = 'https://nodejs.org/dist'
+    download = true
+
+    // Set the work directory for unpacking node
+    workDir = file("${project.buildDir}/nodejs")
+
+    // Set the work directory where node_modules should be located
+    nodeModulesDir = file("${project.projectDir}/src/main/webapp/app")
+}
+
+gulp {
+    // Set the directory where gulpfile.js should be found
+    workDir = file("${project.projectDir}/src/main/webapp/app")
+
+    // Whether colors should output on the terminal
+    colors = true
+
+    // Whether output from Gulp should be buffered - useful when running tasks in parallel
+    bufferOutput = false
+}
+
+tomcat {
+    httpPort = 8090
+    httpsPort = 8091
+    enableSSL = true
+    contextPath = 'linkviewer'
+}
+
+war {
+    zip64 = true
 }

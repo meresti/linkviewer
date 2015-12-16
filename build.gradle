@@ -4,21 +4,7 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'idea';
 
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
-        classpath "com.moowork.gradle:gradle-node-plugin:0.11"
-        classpath 'com.moowork.gradle:gradle-gulp-plugin:0.11'
-        classpath 'com.ewerk.gradle.plugins:querydsl-plugin:1.0.3'
-    }
-}
-
 project(':core') {
-    apply plugin: 'com.ewerk.gradle.plugins.querydsl'
 }
 
 project(':tools') {
@@ -30,67 +16,10 @@ project(':tools') {
 }
 
 project(':ux') {
-
-    def tomcatVersion = '7.0.59'
-
     apply plugin: 'java'
-    apply plugin: 'war'
-    apply plugin: 'com.bmuschko.tomcat'
-    apply plugin: 'com.moowork.node'
-    apply plugin: 'com.moowork.gulp'
 
     dependencies {
         compile project(':core')
-//        testCompile project(path: ':core', configuration: 'tests')
-
-        tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-                "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
-                "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-    }
-
-    node {
-        // Version of node to use.
-        version = '5.1.1'
-
-        distBaseUrl = 'https://nodejs.org/dist'
-        download = true
-
-        // Set the work directory for unpacking node
-        workDir = file("${project.buildDir}/nodejs")
-
-        // Set the work directory where node_modules should be located
-        nodeModulesDir = file("${project.projectDir}/src/main/webapp/app")
-    }
-
-    gulp {
-        // Set the directory where gulpfile.js should be found
-        workDir = file("${project.projectDir}/src/main/webapp/app")
-
-        // Whether colors should output on the terminal
-        colors = true
-
-        // Whether output from Gulp should be buffered - useful when running tasks in parallel
-        bufferOutput = false
-    }
-
-    tomcat {
-        httpPort = 8090
-        httpsPort = 8091
-        enableSSL = true
-        contextPath = 'linkviewer'
-    }
-
-    war {
-//        dependsOn gulp_export
-
-//        from  ('src/main/webapp/app'){
-//            exclude '*/**'
-//        }
-//        include "${project.projectDir}/src/main/webapp/app/export/**"
-//        exclude "${project.projectDir}/src/main/webapp/app/jspm_packages/**"
-//        exclude "${project.projectDir}/src/main/webapp/app/node_modules/**"
-
-        zip64 = true
     }
 }
 
@@ -106,6 +35,7 @@ configure(allprojects) { project ->
         compile 'org.springframework:spring-context:4.2.3.RELEASE'
         compile 'org.apache.logging.log4j:log4j-core:2.5'
         compile 'org.apache.logging.log4j:log4j-api:2.5'
+        compile 'org.apache.logging.log4j:log4j-web:2.5'
         compile 'org.jetbrains:annotations:15.0'
 
         testCompile 'junit:junit:4.12'

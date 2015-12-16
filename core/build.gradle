@@ -1,6 +1,18 @@
 group 'linkviewer'
 version '1.0-SNAPSHOT'
 
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.ewerk.gradle.plugins:querydsl-plugin:1.0.3'
+    }
+}
+
+apply plugin: 'com.ewerk.gradle.plugins.querydsl'
+
 dependencies {
     compile 'org.springframework.data:spring-data-commons:1.11.1.RELEASE'
     compile 'org.springframework.data:spring-data-commons-core:1.4.1.RELEASE'
