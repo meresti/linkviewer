@@ -12,6 +12,8 @@ ux/src/main/webapp/app/export
 ux/src/main/webapp/app/jspm_packages
 ux/src/main/webapp/app/node_modules
 
+logs
+
 # Eclipse artifacts, including WTP generated manifests
 .classpath
 .project

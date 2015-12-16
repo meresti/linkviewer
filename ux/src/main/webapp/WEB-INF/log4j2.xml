@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+<Configuration status="debug">
+    <Properties>
+        <Property name="log-path">logs</Property>
+    </Properties>
+
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="%d [%-5p] [%-20t] %C : %m%n"/>
         </Console>
+        <RollingFile name="ROLL" fileName="${log-path}/linkviewer-web.log"
+                     filePattern="${log-path}/$${date:yyyy-MM}/linkviewer-web-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d [%-5p] [%-20t] %C : %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="org.apache.log4j.xml" level="debug"/>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="ROLL"/>
         </Root>
     </Loggers>
 </Configuration>
