@@ -21,6 +21,7 @@
         </RollingFile>
     </Appenders>
     <Loggers>
+        <Logger name="org.springframework.data.mongodb" level="debug"/>
         <Root level="info">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="ROLL"/>
