@@ -1,4 +1,5 @@
 rootProject.name = 'linkviewer'
 include 'core'
+include 'mockito-extensions'
 include 'tools'
 include 'ux'

@@ -24,6 +24,7 @@ package meresti.linkviewer.core.entities;
 
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -37,9 +38,11 @@ public class ContentRoomLink {
     @Id
     private BigInteger id;
 
-    private BigInteger roomId;
+    @DBRef
+    private ContentRoom room;
 
-    private BigInteger linkId;
+    @DBRef
+    private Link link;
 
     private @Nullable Relevance relevance;
 
@@ -50,10 +53,10 @@ public class ContentRoomLink {
     public ContentRoomLink() {
     }
 
-    public ContentRoomLink(final BigInteger id, final BigInteger roomId, final BigInteger linkId) {
+    public ContentRoomLink(final BigInteger id, final ContentRoom room, final Link link) {
         this.id = id;
-        this.roomId = roomId;
-        this.linkId = linkId;
+        this.room = room;
+        this.link = link;
     }
 
     public BigInteger getId() {
@@ -64,23 +67,23 @@ public class ContentRoomLink {
         this.id = id;
     }
 
-    public BigInteger getRoomId() {
-        return roomId;
+    public ContentRoom getRoom() {
+        return room;
     }
 
-    public void setRoomId(final BigInteger roomId) {
-        this.roomId = roomId;
+    public void setRoom(final ContentRoom room) {
+        this.room = room;
     }
 
-    public BigInteger getLinkId() {
-        return linkId;
+    public Link getLink() {
+        return link;
     }
 
-    public void setLinkId(final BigInteger linkId) {
-        this.linkId = linkId;
+    public void setLink(final Link link) {
+        this.link = link;
     }
 
-    public Relevance getRelevance() {
+    public @Nullable Relevance getRelevance() {
         return relevance;
     }
 

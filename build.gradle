@@ -20,6 +20,8 @@ project(':ux') {
 
     dependencies {
         compile project(':core')
+
+        testCompile project(':mockito-extensions')
     }
 }
 

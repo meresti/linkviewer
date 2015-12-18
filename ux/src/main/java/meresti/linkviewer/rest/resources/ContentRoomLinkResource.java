@@ -20,20 +20,42 @@
  * SOFTWARE.
  */
 
-import {Link} from 'link.js'
-import {HttpClient} from 'aurelia-fetch-client';
-import 'fetch';
+package meresti.linkviewer.rest.resources;
 
-export class LinkService {
-    constructor() {
-        this.http = new HttpClient().configure(config=> {
-            config.useStandardConfiguration();
-        });
+import meresti.linkviewer.core.entities.Relevance;
+import org.springframework.hateoas.ResourceSupport;
+
+import java.math.BigDecimal;
+
+public class ContentRoomLinkResource extends ResourceSupport {
+
+    private LinkResource link;
+
+    private Relevance relevance;
+
+    private BigDecimal relevanceRate;
+
+    public LinkResource getLink() {
+        return link;
     }
 
-    getLinks(roomId, currentIndex, batchSize) {
-        return this.http.fetch('/linkviewer/rooms/' + roomId + '/links/' + currentIndex + '/' + batchSize)
-            .then(response => response.json())
-            .then(links => links.map(link => new Link(link)));
+    public void setLink(final LinkResource link) {
+        this.link = link;
+    }
+
+    public Relevance getRelevance() {
+        return relevance;
+    }
+
+    public void setRelevance(final Relevance relevance) {
+        this.relevance = relevance;
+    }
+
+    public BigDecimal getRelevanceRate() {
+        return relevanceRate;
+    }
+
+    public void setRelevanceRate(final BigDecimal relevanceRate) {
+        this.relevanceRate = relevanceRate;
     }
 }

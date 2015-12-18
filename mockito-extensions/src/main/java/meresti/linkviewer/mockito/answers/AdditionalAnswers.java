@@ -20,9 +20,29 @@
  * SOFTWARE.
  */
 
-export class Link {
-    constructor(data) {
-        Object.assign(this, data);
+package meresti.linkviewer.mockito.answers;
+
+import org.mockito.stubbing.Answer;
+
+import java.util.function.Function;
+
+public final class AdditionalAnswers {
+    private AdditionalAnswers() {
+    }
+
+    public static <S, T> Answer<T> returnsFirstArgMapped(final Class<S> argumentType, final Function<? super S, ? extends T> mapper) {
+        return returnsArgumentMappedAt(0, argumentType, mapper);
+    }
+
+    public static <S, T> Answer<T> returnsSecondArgMapped(final Class<S> argumentType, final Function<? super S, ? extends T> mapper) {
+        return returnsArgumentMappedAt(1, argumentType, mapper);
+    }
+
+    public static <S, T> Answer<T> returnsLastArgMapped(final Class<S> argumentType, final Function<? super S, ? extends T> mapper) {
+        return returnsArgumentMappedAt(ReturnsArgumentMappedAt.LAST_ARGUMENT, argumentType, mapper);
+    }
+
+    public static <S, T> Answer<T> returnsArgumentMappedAt(final int argumentPosition, final Class<S> argumentType, final Function<? super S, ? extends T> mapper) {
+        return new ReturnsArgumentMappedAt<>(argumentPosition, argumentType, mapper);
     }
 }
-

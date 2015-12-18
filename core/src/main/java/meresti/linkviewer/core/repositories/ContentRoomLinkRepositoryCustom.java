@@ -22,13 +22,12 @@
 
 package meresti.linkviewer.core.repositories;
 
+import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.ContentRoomLink;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.math.BigInteger;
-
 interface ContentRoomLinkRepositoryCustom {
 
-    Page<ContentRoomLink> findByRoomId(BigInteger roomId, Pageable pageable);
+    Page<ContentRoomLink> findByRoom(ContentRoom room, Pageable pageable);
 }

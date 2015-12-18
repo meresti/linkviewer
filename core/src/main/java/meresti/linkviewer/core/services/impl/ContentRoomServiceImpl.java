@@ -33,14 +33,13 @@ import meresti.linkviewer.core.services.ContentRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Transactional(readOnly = true)
@@ -95,35 +94,39 @@ public class ContentRoomServiceImpl implements ContentRoomService {
 
     @Override
     @Transactional(readOnly = false)
-    public Link addLinkToRoom(final BigInteger roomId, final Link link) {
-        final BigInteger linkId = link.getId();
-        ContentRoomLink contentRoomLink = contentRoomLinkRepository.findByRoomIdAndLinkId(roomId, linkId);
+    public ContentRoomLink addLinkToRoom(final BigInteger roomId, final Link link) {
+        final ContentRoom contentRoom = findById(roomId);
+        ContentRoomLink contentRoomLink = contentRoomLinkRepository.findByRoomAndLink(contentRoom, link);
         if (contentRoomLink == null) {
-            contentRoomLink = new ContentRoomLink(null, roomId, linkId);
-            contentRoomLinkRepository.save(contentRoomLink);
+            contentRoomLink = contentRoomLinkRepository.save(new ContentRoomLink(null, contentRoom, link));
         }
-        return link;
+        return contentRoomLink;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Link removeLinkFromRoom(final BigInteger roomId, final BigInteger linkId) {
+    public ContentRoomLink removeLinkFromRoom(final BigInteger roomId, final BigInteger linkId) {
+        final ContentRoom contentRoom = findById(roomId);
         final Link link = findLinkById(linkId);
-        final ContentRoomLink contentRoomLink = contentRoomLinkRepository.findByRoomIdAndLinkId(roomId, linkId);
+        final ContentRoomLink contentRoomLink = contentRoomLinkRepository.findByRoomAndLink(contentRoom, link);
         if (contentRoomLink != null) {
             contentRoomLinkRepository.delete(contentRoomLink);
         }
-        return link;
+        return contentRoomLink;
     }
 
     @Override
-    public List<Link> findLinks(final BigInteger roomId, final int page, final int size) {
+    public List<ContentRoomLink> findLinks(final BigInteger roomId, final long startIndex, final int pageSize) {
 
-        final Page<ContentRoomLink> contentRoomLinkPage = contentRoomLinkRepository.findByRoomId(roomId, new PageRequest(page, size));
+        final ContentRoom contentRoom = findById(roomId);
+
+        final int page = (int) (startIndex / (long) pageSize);
+        final int elementsToSkip = (int) (startIndex % (long) pageSize);
+        final Pageable pageRequest = new PageRequest(page, pageSize);
+
+        final Page<ContentRoomLink> contentRoomLinkPage = contentRoomLinkRepository.findByRoom(contentRoom, pageRequest);
         final List<ContentRoomLink> contentRoomLinks = contentRoomLinkPage.getContent();
-        final List<BigInteger> linkIds = contentRoomLinks.stream().map(ContentRoomLink::getLinkId).collect(Collectors.toList());
-        final Iterable<Link> links = linkRepository.findAll(linkIds);
-        return StreamSupport.stream(links.spliterator(), false).collect(Collectors.toList());
+        return contentRoomLinks.subList(elementsToSkip, contentRoomLinks.size());
     }
 
     @Override

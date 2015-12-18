@@ -23,14 +23,17 @@
 package meresti.linkviewer.rest.controllers;
 
 import meresti.linkviewer.core.entities.ContentRoom;
+import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.core.entities.Link;
 import meresti.linkviewer.core.exceptions.ObjectAlreadyExistsException;
 import meresti.linkviewer.core.exceptions.ObjectNotFoundException;
 import meresti.linkviewer.core.services.ContentRoomService;
 import meresti.linkviewer.rest.exceptions.ConflictException;
 import meresti.linkviewer.rest.exceptions.NotFoundException;
+import meresti.linkviewer.rest.resources.ContentRoomLinkResource;
 import meresti.linkviewer.rest.resources.ContentRoomResource;
 import meresti.linkviewer.rest.resources.LinkResource;
+import meresti.linkviewer.rest.resources.asm.ContentRoomLinkResourceAsm;
 import meresti.linkviewer.rest.resources.asm.ContentRoomResourceAsm;
 import meresti.linkviewer.rest.resources.asm.LinkResourceAsm;
 import org.apache.logging.log4j.LogManager;
@@ -90,12 +93,12 @@ public class ContentRoomController {
         return new ResponseEntity<>(resourceAsm.toResource(contentRoom), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{roomId}/links/{page}/{size}")
-    public ResponseEntity<List<LinkResource>> getLinks(@PathVariable("roomId") final BigInteger roomId,
-                                                       @PathVariable("page") final int page,
-                                                       @PathVariable("size") final int size) {
-        final List<Link> links = contentRoomService.findLinks(roomId, page, size);
-        final List<LinkResource> resources = new LinkResourceAsm().toResources(links);
+    @RequestMapping(method = RequestMethod.GET, path = "/{roomId}/links/{startIndex}/{pageSize}")
+    public ResponseEntity<List<ContentRoomLinkResource>> getLinks(@PathVariable("roomId") final BigInteger roomId,
+                                                                  @PathVariable("startIndex") final long startIndex,
+                                                                  @PathVariable("pageSize") final int pageSize) {
+        final List<ContentRoomLink> links = contentRoomService.findLinks(roomId, startIndex, pageSize);
+        final List<ContentRoomLinkResource> resources = new ContentRoomLinkResourceAsm(new LinkResourceAsm()).toResources(links);
         return new ResponseEntity<>(resources, HttpStatus.OK);
     }
 
@@ -112,23 +115,25 @@ public class ContentRoomController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/{roomId}/links")
-    public LinkResource addLinkToRoom(@PathVariable("roomId") final BigInteger roomId,
-                                      @RequestBody final LinkResource receivedLinkResource) {
+    public ContentRoomLinkResource addLinkToRoom(@PathVariable("roomId") final BigInteger roomId,
+                                                 @RequestBody final LinkResource receivedLinkResource) {
         try {
             final LinkResourceAsm linkResourceAsm = new LinkResourceAsm();
+            final ResourceAssemblerSupport<ContentRoomLink, ContentRoomLinkResource> contentRoomLinkResourceAsm = new ContentRoomLinkResourceAsm(linkResourceAsm);
             final Link receivedLink = linkResourceAsm.fromResource(receivedLinkResource);
-            final Link addedLink = contentRoomService.addLinkToRoom(roomId, receivedLink);
-            return linkResourceAsm.toResource(addedLink);
+            final ContentRoomLink addedLink = contentRoomService.addLinkToRoom(roomId, receivedLink);
+            return contentRoomLinkResourceAsm.toResource(addedLink);
         } catch (final ObjectNotFoundException e) {
             throw new NotFoundException(e);
         }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/{roomId}/links/{linkId}")
-    public LinkResource removeLinkFromRoom(@PathVariable("roomId") final BigInteger roomId, @PathVariable("linkId") final BigInteger linkId) {
+    public ContentRoomLinkResource removeLinkFromRoom(@PathVariable("roomId") final BigInteger roomId,
+                                                      @PathVariable("linkId") final BigInteger linkId) {
         try {
-            final Link addedLink = contentRoomService.removeLinkFromRoom(roomId, linkId);
-            final ResourceAssemblerSupport<Link, LinkResource> linkResourceAsm = new LinkResourceAsm();
+            final ContentRoomLink addedLink = contentRoomService.removeLinkFromRoom(roomId, linkId);
+            final ResourceAssemblerSupport<ContentRoomLink, ContentRoomLinkResource> linkResourceAsm = new ContentRoomLinkResourceAsm(new LinkResourceAsm());
             return linkResourceAsm.toResource(addedLink);
         } catch (final ObjectNotFoundException e) {
             throw new NotFoundException(e);

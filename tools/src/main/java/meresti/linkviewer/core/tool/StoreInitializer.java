@@ -39,7 +39,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.EnumMap;
 import java.util.List;
@@ -82,26 +81,24 @@ public class StoreInitializer {
         final List<ContentRoom> contentRooms = DummyDataCollection.CONTENT_ROOMS.stream().map((roomName) -> new ContentRoom(null, roomName)).collect(Collectors.toList());
         final List<ContentRoom> savedContentRooms = contentRoomRepository.save(contentRooms);
 
-        final List<BigInteger> linkIds = savedLinks.stream().map(Link::getId).collect(Collectors.toList());
         final Random random = new SecureRandom();
         final int contentRoomCount = savedContentRooms.size();
         int fromIndex = 0;
         for (int roomIndex = 0; roomIndex < contentRoomCount; roomIndex++) {
             final ContentRoom contentRoom = savedContentRooms.get(roomIndex);
-            final BigInteger roomId = contentRoom.getId();
 
             final int toIndex = isLastRoom(contentRoomCount, roomIndex) ? savedLinks.size() : random.nextInt(savedLinks.size() - fromIndex) + fromIndex;
-            final List<BigInteger> linkIdSublist = linkIds.subList(fromIndex, toIndex);
+            final List<Link> linkSubList = savedLinks.subList(fromIndex, toIndex);
 
-            final List<ContentRoomLink> contentRoomLinks = linkIdSublist.stream().map(linkId -> createContentRoomLink(roomId, linkId, random)).collect(Collectors.toList());
+            final List<ContentRoomLink> contentRoomLinks = linkSubList.stream().map(link -> createContentRoomLink(contentRoom, link, random)).collect(Collectors.toList());
             contentRoomLinkRepository.save(contentRoomLinks);
 
             fromIndex = toIndex;
         }
     }
 
-    private static ContentRoomLink createContentRoomLink(final BigInteger roomId, final BigInteger linkId, final Random random) {
-        final ContentRoomLink contentRoomLink = new ContentRoomLink(null, roomId, linkId);
+    private static ContentRoomLink createContentRoomLink(final ContentRoom room, final Link link, final Random random) {
+        final ContentRoomLink contentRoomLink = new ContentRoomLink(null, room, link);
         contentRoomLink.setRelevance(getPersonalOpinionatedRelevance(random));
         final Map<Relevance, Long> relevanceCounts = getRelevanceCounts(random);
         if (relevanceCounts != null) {

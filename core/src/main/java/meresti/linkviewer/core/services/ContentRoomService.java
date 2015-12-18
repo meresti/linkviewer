@@ -23,6 +23,7 @@
 package meresti.linkviewer.core.services;
 
 import meresti.linkviewer.core.entities.ContentRoom;
+import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.core.entities.Link;
 
 import java.math.BigInteger;
@@ -40,11 +41,11 @@ public interface ContentRoomService {
 
     ContentRoom findById(BigInteger id);
 
-    Link addLinkToRoom(BigInteger roomId, Link link);
+    ContentRoomLink addLinkToRoom(BigInteger roomId, Link link);
 
-    Link removeLinkFromRoom(BigInteger roomId, BigInteger linkId);
+    ContentRoomLink removeLinkFromRoom(BigInteger roomId, BigInteger linkId);
 
-    List<Link> findLinks(BigInteger roomId, int page, int size);
+    List<ContentRoomLink> findLinks(BigInteger roomId, long startIndex, int pageSize);
 
     Link findLinkById(BigInteger id);
 }

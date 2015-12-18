@@ -5,19 +5,21 @@
 
     <div class="cards clearfix" scroll.trigger="handleScrollEvent($event) & throttle:250">
         <div class="card2" repeat.for="link of links">
-            <a target="_blank" href.bind="link.url">
+            <a target="_blank" href.bind="contentRoomLink.link.url">
                 <div class="card-image"
-                     css="background-image: url(${link.imageUrl ? link.imageUrl: 'images/card_default_image.png'});"></div>
+                     css="background-image: url(${contentRoomLink.link.imageUrl ? contentRoomLink.link.imageUrl: 'images/card_default_image.png'});"></div>
                 <div class="card-text">
-                    <div class="card-title">${link.title}</div>
-                    <div class="card-description">${link.description}</div>
+                    <div class="card-title">${contentRoomLink.link.title}</div>
+                    <div class="card-description">${contentRoomLink.link.description}</div>
                 </div>
             </a>
 
             <div class="card-buttons clearfix">
                 <div class="card-buttons-left">
-                    <span class="card-btn icon-plus-circled" click.delegate="addLinkToRoom(link)"></span>
-                    <span class="card-btn icon-minus-circled" click.delegate="removeLinkFromRoom(link)"></span>
+                    <span class="card-btn icon-plus-circled"
+                          click.delegate="addLinkToRoom(contentRoomLink.link)"></span>
+                    <span class="card-btn icon-minus-circled"
+                          click.delegate="removeLinkFromRoom(contentRoomLink.link)"></span>
                 </div>
                 <div class="card-buttons-right">
                     <span class="card-btn icon-thumbs-up-alt"></span>

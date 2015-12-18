@@ -23,7 +23,9 @@
 package meresti.linkviewer.rest.controllers;
 
 import meresti.linkviewer.core.entities.ContentRoom;
+import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.core.entities.Link;
+import meresti.linkviewer.core.entities.Relevance;
 import meresti.linkviewer.core.exceptions.ObjectNotFoundException;
 import meresti.linkviewer.core.services.ContentRoomService;
 import org.junit.Before;
@@ -36,12 +38,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collections;
 
+import static meresti.linkviewer.mockito.answers.AdditionalAnswers.returnsSecondArgMapped;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.AdditionalAnswers.returnsSecondArg;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -96,26 +99,26 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testGetLinks() throws Exception {
-        final Link link = createDummyLink(BigInteger.ONE);
+        final ContentRoomLink contentRoomLink = createDummyContentRoomLink();
 
-        when(contentRoomService.findLinks(BigInteger.ONE, 0, 10)).thenReturn(Collections.singletonList(link));
-        when(contentRoomService.findLinks(BigInteger.ONE, 1, 10)).thenReturn(Collections.emptyList());
-        when(contentRoomService.findLinks(BigInteger.TEN, 0, 10)).thenReturn(Collections.emptyList());
+        when(contentRoomService.findLinks(BigInteger.ONE, 0L, 10)).thenReturn(Collections.singletonList(contentRoomLink));
+        when(contentRoomService.findLinks(BigInteger.ONE, 10L, 10)).thenReturn(Collections.emptyList());
+        when(contentRoomService.findLinks(BigInteger.TEN, 0L, 10)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/rooms/{roomId}/links/{page}/{size}", BigInteger.ONE, 0, 10))
+        mockMvc.perform(get("/rooms/{roomId}/links/{startIndex}/{pageSize}", BigInteger.ONE, 0L, 10))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].url", is(link.getUrl())))
-                .andExpect(jsonPath("$[0].title", is(link.getTitle())))
-                .andExpect(jsonPath("$[0].description", is(link.getDescription())))
-                .andExpect(jsonPath("$[0].imageUrl", is(link.getImageUrl())));
+                .andExpect(jsonPath("$[0].link.url", is(contentRoomLink.getLink().getUrl())))
+                .andExpect(jsonPath("$[0].link.title", is(contentRoomLink.getLink().getTitle())))
+                .andExpect(jsonPath("$[0].link.description", is(contentRoomLink.getLink().getDescription())))
+                .andExpect(jsonPath("$[0].link.imageUrl", is(contentRoomLink.getLink().getImageUrl())));
 
-        mockMvc.perform(get("/rooms/{roomId}/links/{page}/{size}", BigInteger.ONE, 1, 10))
+        mockMvc.perform(get("/rooms/{roomId}/links/{startIndex}/{pageSize}", BigInteger.ONE, 10L, 10))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(empty())));
 
 
-        mockMvc.perform(get("/rooms/{roomId}/links/{page}/{size}", BigInteger.TEN, 0, 10))
+        mockMvc.perform(get("/rooms/{roomId}/links/{startIndex}/{pageSize}", BigInteger.TEN, 0L, 10))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(empty())));
 
@@ -123,7 +126,7 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testAddLinkToRoom() throws Exception {
-        when(contentRoomService.addLinkToRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArg());
+        when(contentRoomService.addLinkToRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArgMapped(Link.class, ContentRoomControllerTest::createDummyContentRoomLink));
 
         final String dummyLinkJson = "{\"linkId\":1, \"url\":\"http://some.url\",\"title\":\"A dummy link\"}";
         mockMvc.perform(post("/rooms/{roomId}/links", BigInteger.ONE).content(dummyLinkJson).contentType(MediaType.APPLICATION_JSON))
@@ -141,7 +144,7 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testRemoveLinkFromRoom() throws Exception {
-        when(contentRoomService.removeLinkFromRoom(BigInteger.ONE, BigInteger.ONE)).thenReturn(createDummyLink(BigInteger.ONE));
+        when(contentRoomService.removeLinkFromRoom(BigInteger.ONE, BigInteger.ONE)).thenReturn(createDummyContentRoomLink());
 
         mockMvc.perform(delete("/rooms/{roomId}/links/{linkId}", BigInteger.ONE, BigInteger.ONE))
                 .andExpect(status().isOk());
@@ -169,7 +172,7 @@ public class ContentRoomControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    private Link createDummyLink(final BigInteger id) {
+    private static Link createDummyLink(final BigInteger id) {
         final Link link = new Link();
         link.setId(id);
         link.setUrl("http://some.url");
@@ -177,5 +180,17 @@ public class ContentRoomControllerTest {
         link.setDescription("A dummy link about something");
         link.setImageUrl("http://some-image.url");
         return link;
+    }
+
+    private static ContentRoomLink createDummyContentRoomLink() {
+        final Link link = createDummyLink(BigInteger.ONE);
+        return createDummyContentRoomLink(link);
+    }
+
+    private static ContentRoomLink createDummyContentRoomLink(final Link link) {
+        final ContentRoomLink contentRoomLink = new ContentRoomLink(null, null, link);
+        contentRoomLink.setRelevance(Relevance.SOMEWHAT_RELEVANT);
+        contentRoomLink.setRelevanceRate(new BigDecimal("0.12"));
+        return contentRoomLink;
     }
 }

@@ -17,29 +17,39 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * SOFTWARE. 
  */
 
 package meresti.linkviewer.rest.resources.asm;
 
-import meresti.linkviewer.core.entities.ContentRoom;
+import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.rest.controllers.ContentRoomController;
-import meresti.linkviewer.rest.resources.ContentRoomResource;
+import meresti.linkviewer.rest.resources.ContentRoomLinkResource;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
-public class ContentRoomResourceAsm extends ResourceAssemblerSupport<ContentRoom, ContentRoomResource> {
+public class ContentRoomLinkResourceAsm extends ResourceAssemblerSupport<ContentRoomLink, ContentRoomLinkResource> {
 
-    public ContentRoomResourceAsm() {
-        super(ContentRoomController.class, ContentRoomResource.class);
+    private final LinkResourceAsm linkResourceAsm;
+
+    public ContentRoomLinkResourceAsm(final LinkResourceAsm linkResourceAsm) {
+        super(ContentRoomController.class, ContentRoomLinkResource.class);
+        this.linkResourceAsm = linkResourceAsm;
     }
 
     @Override
-    public ContentRoomResource toResource(final ContentRoom entity) {
-        final ContentRoomResource resource = new ContentRoomResource(entity.getId(), entity.getName());
+    public ContentRoomLinkResource toResource(final ContentRoomLink entity) {
+        final ContentRoomLinkResource resource = new ContentRoomLinkResource();
+        resource.setLink(linkResourceAsm.toResource(entity.getLink()));
+        resource.setRelevance(entity.getRelevance());
+        resource.setRelevanceRate(entity.getRelevanceRate());
         return resource;
     }
 
-    public ContentRoom fromResource(final ContentRoomResource resource) {
-        return new ContentRoom(resource.getRoomId(), resource.getName());
+    public ContentRoomLink fromResource(final ContentRoomLinkResource resource) {
+        final ContentRoomLink result = new ContentRoomLink();
+        result.setLink(linkResourceAsm.fromResource(resource.getLink()));
+        result.setRelevance(resource.getRelevance());
+        result.setRelevanceRate(resource.getRelevanceRate());
+        return result;
     }
 }

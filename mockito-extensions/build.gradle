@@ -1,0 +1,8 @@
+group 'linkviewer'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+dependencies {
+    compile 'org.mockito:mockito-all:1.10.19'
+}

@@ -23,15 +23,13 @@
 import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 import {ContentRoomService} from './content-room-service';
-import {LinkService} from './link-service';
 
-@inject(Router, ContentRoomService, LinkService)
+@inject(Router, ContentRoomService)
 export class ContentRoom {
 
-    constructor(rooter, contentRoomService, linkService) {
+    constructor(rooter, contentRoomService) {
         this.rooter = rooter;
         this.contentRoomService = contentRoomService;
-        this.linkService = linkService;
 
         this.currentRoom = 1;
         this.currentIndex = 0;
@@ -44,7 +42,7 @@ export class ContentRoom {
     }
 
     _getNextBatch() {
-        return this.linkService.getLinks(this.currentRoom, this.currentIndex, this.batchSize).then(response=> {
+        return this.contentRoomService.getLinks(this.currentRoom, this.currentIndex, this.batchSize).then(response=> {
             this._addLinks(response);
         });
     }
