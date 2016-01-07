@@ -31,7 +31,7 @@ export class ContentRoom {
         this.rooter = rooter;
         this.contentRoomService = contentRoomService;
 
-        this.currentRoom = 1;
+        this.currentRoom = '26754322596800994262501290204';
         this.currentIndex = 0;
         this.batchSize = 20;
         this.links = [];

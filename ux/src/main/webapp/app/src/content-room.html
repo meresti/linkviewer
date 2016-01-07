@@ -4,7 +4,7 @@
     <div click.trigger="navigate()">Navigate</div>
 
     <div class="cards clearfix" scroll.trigger="handleScrollEvent($event) & throttle:250">
-        <div class="card2" repeat.for="link of links">
+        <div class="card2" repeat.for="contentRoomLink of links">
             <a target="_blank" href.bind="contentRoomLink.link.url">
                 <div class="card-image"
                      css="background-image: url(${contentRoomLink.link.imageUrl ? contentRoomLink.link.imageUrl: 'images/card_default_image.png'});"></div>

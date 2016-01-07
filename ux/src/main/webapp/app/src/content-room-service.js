@@ -25,14 +25,14 @@ import {ContentRoomLink} from 'content-room-link'
 
 export class ContentRoomService {
     constructor() {
-        this.http = new HttpClient().configure(x=> {
-            x.withBaseUrl('/linkviewer');
+        this.http = new HttpClient().configure(builder=> {
+            builder.withBaseUrl('/linkviewer');
         });
     }
 
     getLinks(roomId, currentIndex, batchSize) {
-        return this.http.fetch('/linkviewer/rooms/' + roomId + '/links/' + currentIndex + '/' + batchSize)
-            .then(response => response.json())
+        return this.http.get('/rooms/' + roomId + '/links/' + currentIndex + '/' + batchSize)
+            .then(responseMessage => JSON.parse(responseMessage.response))
             .then(links => links.map(link => new ContentRoomLink(link)));
     }
 
