@@ -31,7 +31,6 @@ import meresti.linkviewer.core.services.ContentRoomService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
@@ -45,6 +44,7 @@ import java.util.Collections;
 import static meresti.linkviewer.mockito.answers.AdditionalAnswers.returnsSecondArgMapped;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -69,7 +69,7 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testCreateContentRoom() throws Exception {
-        when(contentRoomService.createRoom(Matchers.any(ContentRoom.class))).thenAnswer(returnsFirstArg());
+        when(contentRoomService.createRoom(any(ContentRoom.class))).thenAnswer(returnsFirstArg());
 
         mockMvc.perform(post("/rooms").content("{\"name\":\"dummy room\"}").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -126,7 +126,7 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testAddLinkToRoom() throws Exception {
-        when(contentRoomService.addLinkToRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenAnswer(returnsSecondArgMapped(Link.class, ContentRoomControllerTest::createDummyContentRoomLink));
+        when(contentRoomService.addLinkToRoom(eq(BigInteger.ONE), any(Link.class))).thenAnswer(returnsSecondArgMapped(Link.class, ContentRoomControllerTest::createDummyContentRoomLink));
 
         final String dummyLinkJson = "{\"linkId\":1, \"url\":\"http://some.url\",\"title\":\"A dummy link\"}";
         mockMvc.perform(post("/rooms/{roomId}/links", BigInteger.ONE).content(dummyLinkJson).contentType(MediaType.APPLICATION_JSON))
@@ -135,7 +135,7 @@ public class ContentRoomControllerTest {
 
     @Test
     public void testAddLinkToNonExistentRoom() throws Exception {
-        when(contentRoomService.addLinkToRoom(eq(BigInteger.ONE), Matchers.any(Link.class))).thenThrow(new ObjectNotFoundException(BigInteger.ONE.toString()));
+        when(contentRoomService.addLinkToRoom(eq(BigInteger.ONE), any(Link.class))).thenThrow(new ObjectNotFoundException(BigInteger.ONE.toString()));
 
         final String dummyLinkJson = "{\"linkId\":1, \"url\":\"http://some.url\",\"title\":\"A dummy link\"}";
         mockMvc.perform(post("/rooms/{roomId}/links", BigInteger.ONE).content(dummyLinkJson).contentType(MediaType.APPLICATION_JSON))
