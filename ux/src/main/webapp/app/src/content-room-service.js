@@ -26,8 +26,15 @@ import {ContentRoomLink} from 'content-room-link'
 export class ContentRoomService {
     constructor() {
         this.http = new HttpClient().configure(builder=> {
-            builder.withBaseUrl('/linkviewer');
+            builder.withBaseUrl('/linkviewer')
+                .withHeader('Accept', 'application/json');
         });
+    }
+
+    getRooms() {
+        return this.http.get('/rooms')
+            .then(responseMessage => JSON.parse(responseMessage.response));
+
     }
 
     getLinks(roomId, currentIndex, batchSize) {
