@@ -1,19 +1,19 @@
 export class NodeModel {
-    constructor(name, children, openIcon, closedIcon) {
-        this.name = name;
+    constructor(data, children) {
+        this.data = data;
         this.children = children || [];
         this.visible = true;
-        this.openIcon = openIcon || 'fa fa-caret-down';
-        this.closedIcon = closedIcon || 'fa fa-caret-right';
+        this.selected = false;
 
-        if (this.hasChildren()) {
-            this.icon = this.openIcon;
-            this.expanded = true;
-        }
+        this._refreshState();
     }
 
-    hasChildren() {
-        return this.children.length > 0;
+    _refreshState() {
+        if (this.children.length > 0) {
+            this.expanded = true;
+        } else {
+            this.expanded = undefined;
+        }
     }
 
     toggleNode() {
@@ -22,6 +22,30 @@ export class NodeModel {
         }
 
         this.expanded = !this.expanded;
-        this.icon = this.expanded === true ? this.openIcon : this.closedIcon;
+    }
+
+    add(children) {
+        this.children.push.apply(this.children, children);
+        this._refreshState();
+    }
+
+    remove(children) {
+        for (let child of children) {
+            let index = this.children.indexOf(child);
+            if (index > -1) {
+                this.children.splice(index, 1);
+                this._refreshState();
+            }
+        }
+    }
+
+    removeAt(index) {
+        this.children.splice(index, 1);
+        this._refreshState();
+    }
+
+    clearChildren() {
+        this.children = [];
+        this._refreshState();
     }
 }

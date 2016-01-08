@@ -1,11 +1,13 @@
 <template>
-    <ul show.bind="current.visible" style="list-style-type: none;padding-left: 14px;">
+    <require from="./tree-node.css"></require>
+
+    <ul show.bind="node.visible" style="list-style-type: none;padding-left: 14px;">
         <li>
             <div>
-                <span if.bind="current.hasChildren()" click.trigger="current.toggleNode()" class="${current.icon}"></span>
-                <span css="padding-left: ${current.hasChildren()? 0 : 14}px" click.delegate="onClick()">${current.name}</span>
+                <span if.bind="node.children.length > 0" click.trigger="node.toggleNode()" class="tree-node-icon fa ${node.expanded ? 'fa-caret-down' : 'fa-caret-right'}"></span>
+                <span class="${node.children.length > 0 ? '' : 'tree-node-padding'} ${node.selected ? 'tree-node-selected' : ''}" click.delegate="onClick()">${node.data}</span>
             </div>
-            <tree-node repeat.for="node of current.children" current.bind="node"></tree-node>
+            <tree-node repeat.for="child of node.children" node.bind="child" treeview.bind="treeview"></tree-node>
         </li>
     </ul>
 </template>

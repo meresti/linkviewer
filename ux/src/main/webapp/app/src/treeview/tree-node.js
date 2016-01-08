@@ -1,10 +1,13 @@
-import {Behavior} from 'aurelia-framework';
-import {bindable} from 'aurelia-framework';
+import {customElement, bindable} from 'aurelia-framework';
 
+@customElement('tree-node')
 export class TreeNode {
-    @bindable current = null;
+    @bindable node = null;
+    @bindable treeview;
 
     onClick() {
-        console.log(this.current.name);
+        if (this.treeview) {
+            this.treeview.onClick(this.node);
+        }
     }
 }

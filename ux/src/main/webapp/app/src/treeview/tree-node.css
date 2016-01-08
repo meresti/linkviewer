@@ -1,0 +1,12 @@
+
+.tree-node-icon {
+    width: 10px;
+}
+
+.tree-node-padding {
+    padding-left: 14px;
+}
+
+.tree-node-selected {
+    color: #f49210;
+}
