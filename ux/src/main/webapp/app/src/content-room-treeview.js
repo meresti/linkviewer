@@ -1,11 +1,13 @@
 import {inject} from 'aurelia-framework';
 import {ContentRoomService} from './content-room-service';
 import {NodeModel} from './treeview/node-model';
+import {Tree} from './treeview/tree';
 
 @inject(ContentRoomService)
 export class TestTreeview {
     constructor(contentRoomService) {
         this.contentRoomService = contentRoomService;
+        this.tree = new Tree();
     }
 
     activate() {
@@ -18,7 +20,7 @@ export class TestTreeview {
 
             let allRooms = new NodeModel('All', roomNodes);
 
-            this.nodes = [allRooms];
+            this.tree.setRoots([allRooms]);
         });
     }
 }
