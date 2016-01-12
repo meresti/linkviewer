@@ -23,4 +23,8 @@ export class TestTreeview {
             this.tree.setRoots([allRooms]);
         });
     }
+
+    onSelectionChanged(event) {
+        console.log('Content room "' + event.detail.node.data + '" selected.');
+    }
 }

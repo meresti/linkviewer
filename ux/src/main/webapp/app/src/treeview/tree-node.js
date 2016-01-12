@@ -1,13 +1,20 @@
-import {customElement, bindable} from 'aurelia-framework';
+import {customElement, bindable, inject} from 'aurelia-framework';
+import {DOM} from 'aurelia-pal';
 
 @customElement('tree-node')
+@inject(Element)
 export class TreeNode {
     @bindable node = null;
-    @bindable tree;
+
+    constructor(element) {
+        this.element = element;
+    }
 
     onClick() {
-        if (this.tree) {
-            this.tree.onClick(this.node);
-        }
+        let event = DOM.createCustomEvent('select', {
+            detail: {node: this.node},
+            bubbles: true
+        });
+        this.element.dispatchEvent(event);
     }
 }

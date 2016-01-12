@@ -58,6 +58,7 @@ export class Tree {
     }
 
     select(node) {
+        this.deselectAll(this.roots);
         node.selected = true;
     }
 
@@ -65,19 +66,27 @@ export class Tree {
         node.selected = false;
     }
 
+    getSelection() {
+        return this._doGetSelection(this.roots);
+    }
+
+    _doGetSelection(nodes) {
+        let selection = null;
+        for (let i = 0; i < nodes.length && selection == null; i++) {
+            let node = nodes[i];
+            if (node.selected) {
+                selection = node;
+            } else {
+                selection = this._doGetSelection(node.children);
+            }
+        }
+        return selection;
+    }
+
     deselectAll(nodes) {
         for (let node of nodes) {
             this.deselect(node);
             this.deselectAll(node.children);
         }
-    }
-
-    onClick(node) {
-        this.deselectAll(this.roots);
-        this.select(node);
-
-        //this.removeChildren(node);
-
-        //this.remove(node);
     }
 }

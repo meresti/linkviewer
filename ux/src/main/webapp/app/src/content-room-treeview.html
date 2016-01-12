@@ -1,4 +1,4 @@
 <template>
     <require from="./treeview/tree-view"></require>
-    <tree-view tree.bind="tree"></tree-view>
+    <tree-view tree.bind="tree" selection.delegate="onSelectionChanged($event)"></tree-view>
 </template>

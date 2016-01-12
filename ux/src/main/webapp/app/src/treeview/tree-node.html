@@ -7,7 +7,7 @@
                 <span if.bind="node.children.length > 0" click.trigger="node.toggleNode()" class="tree-node-icon fa ${node.expanded ? 'fa-caret-down' : 'fa-caret-right'}"></span>
                 <span class="${node.children.length > 0 ? '' : 'tree-node-padding'} ${node.selected ? 'tree-node-selected' : ''}" click.delegate="onClick()">${node.data}</span>
             </div>
-            <tree-node repeat.for="child of node.children" node.bind="child" tree.bind="tree"></tree-node>
+            <tree-node repeat.for="child of node.children" node.bind="child"></tree-node>
         </li>
     </ul>
 </template>

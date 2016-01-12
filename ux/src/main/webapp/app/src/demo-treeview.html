@@ -1,4 +1,5 @@
 <template>
     <require from="./treeview/tree-view"></require>
-    <tree-view tree.bind="tree"></tree-view>
+    <tree-view style="width: 40%; display: inline-block; vertical-align: top;" tree.bind="tree1" selection.delegate="onSelectionChanged($event)"></tree-view>
+    <tree-view style="width: 40%; display: inline-block; vertical-align: top;" tree.bind="tree2" selection.delegate="onSelectionChanged($event)"></tree-view>
 </template>

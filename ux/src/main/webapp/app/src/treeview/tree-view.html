@@ -1,4 +1,4 @@
 <template>
     <require from="./tree-node"></require>
-    <tree-node repeat.for="root of tree.roots" node.bind="root" tree.bind="tree"></tree-node>
+    <tree-node repeat.for="root of tree.roots" node.bind="root" select.delegate="onSelect($event)"></tree-node>
 </template>
