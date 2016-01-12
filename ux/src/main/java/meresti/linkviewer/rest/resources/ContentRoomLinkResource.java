@@ -25,15 +25,13 @@ package meresti.linkviewer.rest.resources;
 import meresti.linkviewer.core.entities.Relevance;
 import org.springframework.hateoas.ResourceSupport;
 
-import java.math.BigDecimal;
-
 public class ContentRoomLinkResource extends ResourceSupport {
 
     private LinkResource link;
 
     private Relevance relevance;
 
-    private BigDecimal relevanceRate;
+    private String relevanceRate;
 
     public LinkResource getLink() {
         return link;
@@ -51,11 +49,11 @@ public class ContentRoomLinkResource extends ResourceSupport {
         this.relevance = relevance;
     }
 
-    public BigDecimal getRelevanceRate() {
+    public String getRelevanceRate() {
         return relevanceRate;
     }
 
-    public void setRelevanceRate(final BigDecimal relevanceRate) {
+    public void setRelevanceRate(final String relevanceRate) {
         this.relevanceRate = relevanceRate;
     }
 }

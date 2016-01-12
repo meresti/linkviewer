@@ -24,11 +24,9 @@ package meresti.linkviewer.rest.resources;
 
 import org.springframework.hateoas.ResourceSupport;
 
-import java.math.BigInteger;
-
 public class ContentRoomResource extends ResourceSupport {
 
-    private BigInteger roomId;
+    private String roomId;
 
     private String name;
 
@@ -36,16 +34,16 @@ public class ContentRoomResource extends ResourceSupport {
     public ContentRoomResource() {
     }
 
-    public ContentRoomResource(final BigInteger roomId, final String name) {
+    public ContentRoomResource(final String roomId, final String name) {
         this.roomId = roomId;
         this.name = name;
     }
 
-    public BigInteger getRoomId() {
+    public String getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(final BigInteger roomId) {
+    public void setRoomId(final String roomId) {
         this.roomId = roomId;
     }
 

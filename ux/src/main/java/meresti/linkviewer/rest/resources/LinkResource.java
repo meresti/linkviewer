@@ -24,11 +24,9 @@ package meresti.linkviewer.rest.resources;
 
 import org.springframework.hateoas.ResourceSupport;
 
-import java.math.BigInteger;
-
 public class LinkResource extends ResourceSupport {
 
-    private BigInteger linkId;
+    private String linkId;
 
     private String url;
 
@@ -43,7 +41,7 @@ public class LinkResource extends ResourceSupport {
 
     }
 
-    public LinkResource(final BigInteger linkId, final String url, final String title, final String description, final String imageUrl) {
+    public LinkResource(final String linkId, final String url, final String title, final String description, final String imageUrl) {
         this.linkId = linkId;
         this.url = url;
         this.title = title;
@@ -51,11 +49,11 @@ public class LinkResource extends ResourceSupport {
         this.imageUrl = imageUrl;
     }
 
-    public BigInteger getLinkId() {
+    public String getLinkId() {
         return linkId;
     }
 
-    public void setLinkId(final BigInteger linkId) {
+    public void setLinkId(final String linkId) {
         this.linkId = linkId;
     }
 
