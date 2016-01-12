@@ -27,6 +27,8 @@ import meresti.linkviewer.rest.controllers.ContentRoomController;
 import meresti.linkviewer.rest.resources.ContentRoomLinkResource;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
+import java.math.BigDecimal;
+
 public class ContentRoomLinkResourceAsm extends ResourceAssemblerSupport<ContentRoomLink, ContentRoomLinkResource> {
 
     private final LinkResourceAsm linkResourceAsm;
@@ -41,7 +43,9 @@ public class ContentRoomLinkResourceAsm extends ResourceAssemblerSupport<Content
         final ContentRoomLinkResource resource = new ContentRoomLinkResource();
         resource.setLink(linkResourceAsm.toResource(entity.getLink()));
         resource.setRelevance(entity.getRelevance());
-        resource.setRelevanceRate(entity.getRelevanceRate());
+        if (entity.getRelevanceRate() != null) {
+            resource.setRelevanceRate(entity.getRelevanceRate().toString());
+        }
         return resource;
     }
 
@@ -49,7 +53,9 @@ public class ContentRoomLinkResourceAsm extends ResourceAssemblerSupport<Content
         final ContentRoomLink result = new ContentRoomLink();
         result.setLink(linkResourceAsm.fromResource(resource.getLink()));
         result.setRelevance(resource.getRelevance());
-        result.setRelevanceRate(resource.getRelevanceRate());
+        if (resource.getRelevanceRate() != null) {
+            result.setRelevanceRate(new BigDecimal(resource.getRelevanceRate()));
+        }
         return result;
     }
 }

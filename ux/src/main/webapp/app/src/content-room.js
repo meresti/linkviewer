@@ -24,21 +24,25 @@ import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 import {ContentRoomService} from './content-room-service';
 
-@inject(Router, ContentRoomService)
+@inject(ContentRoomService)
 export class ContentRoom {
 
-    constructor(rooter, contentRoomService) {
-        this.rooter = rooter;
+    constructor(contentRoomService) {
         this.contentRoomService = contentRoomService;
-
-        this.currentRoom = '26754322596800994262501290204';
-        this.currentIndex = 0;
         this.batchSize = 20;
-        this.links = [];
     }
 
-    activate() {
+    activate(params, routeConfig) {
+        this.currentRoom = params.id;
+        this.currentIndex = 0;
+        this.links = [];
+
         return this._getNextBatch();
+    }
+
+    deactivate() {
+        this.currentIndex = 0;
+        this.links = [];
     }
 
     _getNextBatch() {
@@ -72,9 +76,5 @@ export class ContentRoom {
                     this.links.splice(index, 1);
                 }
             });
-    }
-
-    navigate() {
-        this.rooter.navigate("users");
     }
 }

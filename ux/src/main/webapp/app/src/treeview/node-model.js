@@ -1,6 +1,10 @@
 export class NodeModel {
     constructor(data, children) {
-        this.data = data;
+        if (typeof data === 'string' || data instanceof String) {
+            this.data = {text: data, key: data};
+        } else {
+            this.data = data;
+        }
         this.children = children || [];
         this.visible = true;
         this.selected = false;

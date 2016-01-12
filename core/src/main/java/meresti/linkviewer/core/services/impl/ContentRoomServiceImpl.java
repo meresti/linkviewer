@@ -22,6 +22,7 @@
 
 package meresti.linkviewer.core.services.impl;
 
+import meresti.linkviewer.core.SpecialContentRooms;
 import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.core.entities.Link;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,13 +120,20 @@ public class ContentRoomServiceImpl implements ContentRoomService {
     @Override
     public List<ContentRoomLink> findLinks(final BigInteger roomId, final long startIndex, final int pageSize) {
 
-        final ContentRoom contentRoom = findById(roomId);
-
         final int page = (int) (startIndex / (long) pageSize);
         final int elementsToSkip = (int) (startIndex % (long) pageSize);
-        final Pageable pageRequest = new PageRequest(page, pageSize);
 
-        final Page<ContentRoomLink> contentRoomLinkPage = contentRoomLinkRepository.findByRoom(contentRoom, pageRequest);
+        final Page<ContentRoomLink> contentRoomLinkPage;
+        if (SpecialContentRooms.ALL_ROOMS.getId().equals(roomId)) {
+            final Sort sort = new Sort(Sort.Direction.DESC, "relevanceRate");
+            final Pageable pageRequest = new PageRequest(page, pageSize, sort);
+            contentRoomLinkPage = contentRoomLinkRepository.findAll(pageRequest);
+        } else {
+            final ContentRoom contentRoom = findById(roomId);
+            final Pageable pageRequest = new PageRequest(page, pageSize);
+            contentRoomLinkPage = contentRoomLinkRepository.findByRoom(contentRoom, pageRequest);
+        }
+
         final List<ContentRoomLink> contentRoomLinks = contentRoomLinkPage.getContent();
         return contentRoomLinks.subList(elementsToSkip, contentRoomLinks.size());
     }

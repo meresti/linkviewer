@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,12 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources;
+.full-height {
+    height: 100%;
+    overflow-y: auto;
+}
 
-import meresti.linkviewer.core.entities.Relevance;
-import org.springframework.hateoas.ResourceSupport;
-
-public class ContentRoomLinkResource extends ResourceSupport {
-
-    private LinkResource link;
-
-    private Relevance relevance;
-
-    private String relevanceRate;
-
-    public LinkResource getLink() {
-        return link;
-    }
-
-    public void setLink(final LinkResource link) {
-        this.link = link;
-    }
-
-    public Relevance getRelevance() {
-        return relevance;
-    }
-
-    public void setRelevance(final Relevance relevance) {
-        this.relevance = relevance;
-    }
-
-    public String getRelevanceRate() {
-        return relevanceRate;
-    }
-
-    public void setRelevanceRate(final String relevanceRate) {
-        this.relevanceRate = relevanceRate;
-    }
+.content-room-tree-navigator {
+    background-color: #ffffff;
+    padding: 10px;
 }

@@ -27,6 +27,8 @@ import meresti.linkviewer.rest.controllers.ContentRoomController;
 import meresti.linkviewer.rest.resources.LinkResource;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
+import java.math.BigInteger;
+
 public class LinkResourceAsm extends ResourceAssemblerSupport<Link, LinkResource> {
     public LinkResourceAsm() {
         super(ContentRoomController.class, LinkResource.class);
@@ -34,12 +36,12 @@ public class LinkResourceAsm extends ResourceAssemblerSupport<Link, LinkResource
 
     @Override
     public LinkResource toResource(final Link entity) {
-        final LinkResource result = new LinkResource(entity.getId(), entity.getUrl(), entity.getTitle(), entity.getDescription(), entity.getImageUrl());
+        final LinkResource result = new LinkResource(entity.getId() != null ? entity.getId().toString() : null, entity.getUrl(), entity.getTitle(), entity.getDescription(), entity.getImageUrl());
 //        result.add(linkTo(methodOn(LinkController.class).getLink(entity.getId())).withSelfRel());
         return result;
     }
 
     public Link fromResource(final LinkResource resource) {
-        return new Link(resource.getLinkId(), resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
+        return new Link(resource.getLinkId() != null ? new BigInteger(resource.getLinkId()) : null, resource.getUrl(), resource.getImageUrl(), resource.getTitle(), resource.getDescription());
     }
 }

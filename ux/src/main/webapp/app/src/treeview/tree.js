@@ -89,4 +89,21 @@ export class Tree {
             this.deselectAll(node.children);
         }
     }
+
+    findByKey(key) {
+        return this._doFindByKey(this.roots, key);
+    }
+
+    _doFindByKey(nodes, key) {
+        let node = null;
+        for (let i = 0; i < nodes.length && node == null; i++) {
+            let candidate = nodes[i];
+            if (candidate.data.key === key) {
+                node = candidate;
+            } else {
+                node = this._doFindByKey(candidate.children, key);
+            }
+        }
+        return node;
+    }
 }

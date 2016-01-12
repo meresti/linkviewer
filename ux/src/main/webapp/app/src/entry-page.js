@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,23 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources;
+import {inject} from 'aurelia-framework';
+import {Router} from 'aurelia-router';
 
-import meresti.linkviewer.core.entities.Relevance;
-import org.springframework.hateoas.ResourceSupport;
+import {ContentRoomService} from './content-room-service';
 
-public class ContentRoomLinkResource extends ResourceSupport {
-
-    private LinkResource link;
-
-    private Relevance relevance;
-
-    private String relevanceRate;
-
-    public LinkResource getLink() {
-        return link;
+@inject(Router, ContentRoomService)
+export class EntryPage {
+    constructor(router, contentRoomService) {
+        this.router = router;
+        this.contentRoomService = contentRoomService;
     }
 
-    public void setLink(final LinkResource link) {
-        this.link = link;
-    }
-
-    public Relevance getRelevance() {
-        return relevance;
-    }
-
-    public void setRelevance(final Relevance relevance) {
-        this.relevance = relevance;
-    }
-
-    public String getRelevanceRate() {
-        return relevanceRate;
-    }
-
-    public void setRelevanceRate(final String relevanceRate) {
-        this.relevanceRate = relevanceRate;
+    attached() {
+        this.contentRoomService.getRooms().then(rooms=> {
+            if (rooms.length > 0) {
+                this.router.navigateToRoute("content-room", {id: rooms[0].roomId});
+            }
+        });
     }
 }

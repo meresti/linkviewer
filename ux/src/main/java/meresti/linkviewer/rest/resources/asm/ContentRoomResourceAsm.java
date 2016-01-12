@@ -27,6 +27,8 @@ import meresti.linkviewer.rest.controllers.ContentRoomController;
 import meresti.linkviewer.rest.resources.ContentRoomResource;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
+import java.math.BigInteger;
+
 public class ContentRoomResourceAsm extends ResourceAssemblerSupport<ContentRoom, ContentRoomResource> {
 
     public ContentRoomResourceAsm() {
@@ -35,11 +37,12 @@ public class ContentRoomResourceAsm extends ResourceAssemblerSupport<ContentRoom
 
     @Override
     public ContentRoomResource toResource(final ContentRoom entity) {
-        final ContentRoomResource resource = new ContentRoomResource(entity.getId(), entity.getName());
+        final BigInteger id = entity.getId();
+        final ContentRoomResource resource = new ContentRoomResource(id != null ? id.toString() : null, entity.getName());
         return resource;
     }
 
     public ContentRoom fromResource(final ContentRoomResource resource) {
-        return new ContentRoom(resource.getRoomId(), resource.getName());
+        return new ContentRoom(resource.getRoomId() != null ? new BigInteger(resource.getRoomId()) : null, resource.getName());
     }
 }

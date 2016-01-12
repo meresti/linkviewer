@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,27 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.resources;
+package meresti.linkviewer.core;
 
-import meresti.linkviewer.core.entities.Relevance;
-import org.springframework.hateoas.ResourceSupport;
+import java.math.BigInteger;
 
-public class ContentRoomLinkResource extends ResourceSupport {
+public enum SpecialContentRooms {
+    ALL_ROOMS("All", -1);
 
-    private LinkResource link;
+    private final String name;
+    private final BigInteger id;
 
-    private Relevance relevance;
+    SpecialContentRooms(final String name, final long id) {
 
-    private String relevanceRate;
-
-    public LinkResource getLink() {
-        return link;
+        this.name = name;
+        this.id = BigInteger.valueOf(id);
     }
 
-    public void setLink(final LinkResource link) {
-        this.link = link;
+    public String getName() {
+        return name;
     }
 
-    public Relevance getRelevance() {
-        return relevance;
-    }
-
-    public void setRelevance(final Relevance relevance) {
-        this.relevance = relevance;
-    }
-
-    public String getRelevanceRate() {
-        return relevanceRate;
-    }
-
-    public void setRelevanceRate(final String relevanceRate) {
-        this.relevanceRate = relevanceRate;
+    public BigInteger getId() {
+        return id;
     }
 }
