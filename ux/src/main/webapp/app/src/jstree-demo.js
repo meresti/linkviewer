@@ -43,7 +43,7 @@ export class JsTreeDemo {
         jstree.create_node('TX', "Houston");
         jstree.create_node('TX', "Austin");
         jstree.create_node('#', {"id": "NY", "text": "New York"});
-        jstree.create_node('NY', {"id": "NYC", "text": "New York Cit"});
+        jstree.create_node('NY', {"id": "NYC", "text": "New York City"});
         jstree.create_node('NYC', "Manhattan");
         jstree.create_node('NYC', "Brooklyn");
         jstree.create_node('NYC', "Bronx");
