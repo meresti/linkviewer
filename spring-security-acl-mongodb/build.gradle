@@ -1,0 +1,36 @@
+group 'linkviewer'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.ewerk.gradle.plugins:querydsl-plugin:1.0.3'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'com.ewerk.gradle.plugins.querydsl'
+
+dependencies {
+    compile 'org.springframework.data:spring-data-commons:1.11.1.RELEASE'
+    compile 'org.springframework.data:spring-data-commons-core:1.4.1.RELEASE'
+    compile 'org.springframework.data:spring-data-mongodb:1.8.1.RELEASE'
+
+    compile 'com.mysema.querydsl:querydsl-mongodb:3.7.0'
+}
+
+querydsl {
+    library = "com.mysema.querydsl:querydsl-apt:3.7.0"
+    querydslSourcesDir = "src/main/generated/java"
+
+    springDataMongo = true
+}
+
+idea {
+    module {
+        sourceDirs += file('src/main/generated/java')
+    }
+}

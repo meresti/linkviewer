@@ -3,6 +3,7 @@
 */build
 
 core/src/main/generated
+spring-security-acl-mongodb/src/main/generated
 
 ux/src/main/webapp/app/bower_components
 ux/src/main/webapp/app/build/reports

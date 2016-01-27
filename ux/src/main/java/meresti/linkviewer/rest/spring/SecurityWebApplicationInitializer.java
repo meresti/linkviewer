@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,22 +22,7 @@
 
 package meresti.linkviewer.rest.spring;
 
-import meresti.linkviewer.core.spring.AppConfig;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
-public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-    @Override
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{AppConfig.class, SecurityConfig.class};
-    }
-
-    @Override
-    protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{WebConfig.class};
-    }
-
-    @Override
-    protected String[] getServletMappings() {
-        return new String[]{"/"};
-    }
+public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 }

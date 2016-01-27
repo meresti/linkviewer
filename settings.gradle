@@ -1,5 +1,7 @@
 rootProject.name = 'linkviewer'
 include 'core'
 include 'mockito-extensions'
+include 'spring-security-acl-mongodb'
 include 'tools'
 include 'ux'
+

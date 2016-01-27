@@ -36,6 +36,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.domain.ObjectIdentityImpl;
+import org.springframework.security.acls.domain.PrincipalSid;
+import org.springframework.security.acls.model.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,11 +63,29 @@ public class ContentRoomServiceImpl implements ContentRoomService {
     @Autowired
     private LinkRepository linkRepository;
 
+    @Autowired
+    private MutableAclService mutableAclService;
+
     @Override
     @Transactional(readOnly = false)
     public ContentRoom createRoom(final ContentRoom room) {
 
-        return contentRoomRepository.save(room);
+        final ContentRoom result = contentRoomRepository.save(room);
+
+        addPermission(result, new PrincipalSid(SecurityContextHolder.getContext().getAuthentication()), BasePermission.ADMINISTRATION);
+
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<ContentRoom> createRooms(final List<ContentRoom> rooms) {
+        final List<ContentRoom> savedRooms = contentRoomRepository.save(rooms);
+        final Sid sid = new PrincipalSid(SecurityContextHolder.getContext().getAuthentication());
+        for (final ContentRoom room : savedRooms) {
+            addPermission(room, sid, BasePermission.ADMINISTRATION);
+        }
+        return savedRooms;
     }
 
     @Override
@@ -70,7 +93,15 @@ public class ContentRoomServiceImpl implements ContentRoomService {
     public ContentRoom deleteRoom(final BigInteger id) {
         final ContentRoom contentRoom = findById(id);
         contentRoomRepository.delete(contentRoom);
+
+        final ObjectIdentity objectIdentity = createObjectIdentityFrom(contentRoom);
+        mutableAclService.deleteAcl(objectIdentity, false);
+
         return contentRoom;
+    }
+
+    private static ObjectIdentity createObjectIdentityFrom(final ContentRoom contentRoom) {
+        return new ObjectIdentityImpl(ContentRoom.class, contentRoom.getId().toString());
     }
 
     @Override
@@ -146,5 +177,32 @@ public class ContentRoomServiceImpl implements ContentRoomService {
         }
 
         return link;
+    }
+
+
+    @Override
+    public void addPermission(final ContentRoom room, final Sid sid, final Permission permission) {
+        final ObjectIdentity objectIdentity = createObjectIdentityFrom(room);
+        final MutableAcl mutableAcl = mutableAclService.createAcl(objectIdentity);
+        mutableAcl.insertAce(mutableAcl.getEntries().size(), permission, sid, true);
+        mutableAclService.updateAcl(mutableAcl);
+
+    }
+
+    @Override
+    public void deletePermission(final ContentRoom room, final Sid sid, final Permission permission) {
+        final ObjectIdentity objectIdentity = createObjectIdentityFrom(room);
+        final MutableAcl acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);
+
+        // Remove all permissions associated with this particular recipient (string equality to KISS)
+        final List<AccessControlEntry> entries = acl.getEntries();
+        for (int i = 0; i < entries.size(); i++) {
+            final AccessControlEntry entry = entries.get(i);
+            if (entry.getSid().equals(sid) && entry.getPermission().equals(permission)) {
+                acl.deleteAce(i);
+            }
+        }
+
+        mutableAclService.updateAcl(acl);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,14 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.spring;
+package meresti.linkviewer.core.repositories;
 
-import meresti.linkviewer.core.spring.AppConfig;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import meresti.linkviewer.core.entities.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
-public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-    @Override
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{AppConfig.class, SecurityConfig.class};
-    }
+import java.math.BigInteger;
 
-    @Override
-    protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{WebConfig.class};
-    }
-
-    @Override
-    protected String[] getServletMappings() {
-        return new String[]{"/"};
-    }
+public interface UserRepository extends MongoRepository<User, BigInteger>, QueryDslPredicateExecutor<User> {
+    User findByName(String name);
 }

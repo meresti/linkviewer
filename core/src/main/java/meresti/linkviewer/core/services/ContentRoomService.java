@@ -25,6 +25,10 @@ package meresti.linkviewer.core.services;
 import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.core.entities.Link;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.acls.model.Permission;
+import org.springframework.security.acls.model.Sid;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -33,19 +37,34 @@ public interface ContentRoomService {
 
     ContentRoom createRoom(ContentRoom room);
 
+    List<ContentRoom> createRooms(List<ContentRoom> rooms);
+
     ContentRoom deleteRoom(BigInteger id);
 
     ContentRoom deleteRoom(ContentRoom room);
 
+    @PreAuthorize("hasRole('USER')")
+    @PostFilter("hasPermission(filterObject?.getId()?.toString(),'meresti.linkviewer.core.entities.ContentRoom', 'read') or " +
+            "hasPermission(filterObject?.getId()?.toString(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
     List<ContentRoom> getRooms();
 
+    @PreAuthorize("hasPermission(#id?.toString(),'meresti.linkviewer.core.entities.ContentRoom', 'read') or hasPermission(#id?.toString(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
     ContentRoom findById(BigInteger id);
 
+    @PreAuthorize("hasPermission(#roomId?.toString(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
     ContentRoomLink addLinkToRoom(BigInteger roomId, Link link);
 
+    @PreAuthorize("hasPermission(#roomId?.toString(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
     ContentRoomLink removeLinkFromRoom(BigInteger roomId, BigInteger linkId);
 
+    @PreAuthorize("hasPermission(#roomId?.toString(),'meresti.linkviewer.core.entities.ContentRoom', 'read') or hasPermission(#roomId?.toString(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
     List<ContentRoomLink> findLinks(BigInteger roomId, long startIndex, int pageSize);
 
     Link findLinkById(BigInteger id);
+
+    @PreAuthorize("hasPermission(#room, admin)")
+    void addPermission(ContentRoom room, Sid sid, Permission permission);
+
+    @PreAuthorize("hasPermission(#room, admin)")
+    void deletePermission(ContentRoom room, Sid sid, Permission permission);
 }

@@ -12,6 +12,7 @@ project(':tools') {
 
     dependencies {
         compile project(':core')
+        compile project(':ux')
     }
 }
 
@@ -20,6 +21,7 @@ project(':ux') {
 
     dependencies {
         compile project(':core')
+        compile project(':spring-security-acl-mongodb')
 
         testCompile project(':mockito-extensions')
     }
@@ -35,6 +37,11 @@ configure(allprojects) { project ->
 
     dependencies {
         compile 'org.springframework:spring-context:4.2.3.RELEASE'
+        compile 'org.springframework.security:spring-security-acl:4.0.3.RELEASE'
+        compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'
+        compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
+        compile 'org.springframework:spring-context-support:4.2.3.RELEASE'
+        runtime 'net.sf.ehcache:ehcache:2.10.0'
         compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.5'
         compile 'org.apache.logging.log4j:log4j-core:2.5'
         compile 'org.apache.logging.log4j:log4j-api:2.5'

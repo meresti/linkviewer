@@ -23,6 +23,7 @@
 package meresti.linkviewer.core.tool;
 
 import meresti.linkviewer.core.entities.Link;
+import meresti.linkviewer.core.entities.User;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -279,5 +280,9 @@ public class DummyDataCollection {
                     "Шкафы — Армавир Если вас не устраивают результаты поиска, попробуйте изменить запрос, убрать неключевые слова из поискового запроса и/или оптимизируйте вид поиска. Первое слово в запросе самое важное "
             ));
 
-    public static List<String> CONTENT_ROOMS = Arrays.asList("demo 1", "demo 2", "demo 3");
+    public static List<String> CONTENT_ROOMS = Arrays.asList("Room 1", "Room 2", "Room 3");
+
+    public static User NORMAL_USER = new User(null, "user", "welcome");
+
+    public static User ADMIN_USER = new User(null, "admin", "welcome");
 }

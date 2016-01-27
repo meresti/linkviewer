@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,53 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.rest.spring;
+package meresti.linkviewer.core.entities;
 
-import meresti.linkviewer.core.spring.AppConfig;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-    @Override
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{AppConfig.class, SecurityConfig.class};
+import java.math.BigInteger;
+
+@Document(collection = "User")
+public class User {
+
+    @Id
+    private BigInteger id;
+
+    private String name;
+
+    private String password;
+
+    public User() {
     }
 
-    @Override
-    protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{WebConfig.class};
+    public User(final BigInteger id, final String name, final String password) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
     }
 
-    @Override
-    protected String[] getServletMappings() {
-        return new String[]{"/"};
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(final BigInteger id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
     }
 }

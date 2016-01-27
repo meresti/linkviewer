@@ -23,27 +23,27 @@
 package meresti.linkviewer.core.tool;
 
 import meresti.linkviewer.core.RelevanceRateCalculator;
-import meresti.linkviewer.core.entities.ContentRoom;
-import meresti.linkviewer.core.entities.ContentRoomLink;
-import meresti.linkviewer.core.entities.Link;
-import meresti.linkviewer.core.entities.Relevance;
+import meresti.linkviewer.core.entities.*;
 import meresti.linkviewer.core.repositories.ContentRoomLinkRepository;
-import meresti.linkviewer.core.repositories.ContentRoomRepository;
 import meresti.linkviewer.core.repositories.LinkRepository;
+import meresti.linkviewer.core.repositories.UserRepository;
+import meresti.linkviewer.core.services.ContentRoomService;
 import meresti.linkviewer.core.spring.AppConfig;
+import meresti.linkviewer.rest.spring.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -53,16 +53,19 @@ public class StoreInitializer {
     private MongoDbFactory mongoDbFactory;
 
     @Autowired
-    private ContentRoomRepository contentRoomRepository;
+    private ContentRoomService contentRoomService;
 
     @Autowired
     private ContentRoomLinkRepository contentRoomLinkRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private LinkRepository linkRepository;
 
     public static void main(final String[] args) {
-        final ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class, StoreInitializer.class);
+        final ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class, StoreInitializer.class, SecurityConfig.class);
         context.registerShutdownHook();
 
         final StoreInitializer storeInitializer = context.getBean(StoreInitializer.class);
@@ -76,19 +79,31 @@ public class StoreInitializer {
 
     @Transactional
     private void initStore() {
+        final List<User> savedUsers = userRepository.save(Arrays.asList(DummyDataCollection.NORMAL_USER, DummyDataCollection.ADMIN_USER));
+        setUserWhoOwnsAllCreatedData(savedUsers.get(1));
+
         final List<Link> savedLinks = linkRepository.save(DummyDataCollection.LINKS);
 
         final List<ContentRoom> contentRooms = DummyDataCollection.CONTENT_ROOMS.stream().map((roomName) -> new ContentRoom(null, roomName)).collect(Collectors.toList());
-        final List<ContentRoom> savedContentRooms = contentRoomRepository.save(contentRooms);
+        final List<ContentRoom> savedContentRooms = contentRoomService.createRooms(contentRooms);
 
+        saveContentRoomLinks(savedLinks, savedContentRooms);
+    }
+
+    private static void setUserWhoOwnsAllCreatedData(final User user) {
+        final Authentication authRequest = new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword(), AuthorityUtils.createAuthorityList("ROLE_ADMINISTRATOR"));
+        SecurityContextHolder.getContext().setAuthentication(authRequest);
+    }
+
+    private void saveContentRoomLinks(final List<Link> links, final List<ContentRoom> contentRooms) {
         final Random random = new SecureRandom();
-        final int contentRoomCount = savedContentRooms.size();
+        final int contentRoomCount = contentRooms.size();
         int fromIndex = 0;
         for (int roomIndex = 0; roomIndex < contentRoomCount; roomIndex++) {
-            final ContentRoom contentRoom = savedContentRooms.get(roomIndex);
+            final ContentRoom contentRoom = contentRooms.get(roomIndex);
 
-            final int toIndex = isLastRoom(contentRoomCount, roomIndex) ? savedLinks.size() : random.nextInt(savedLinks.size() - fromIndex) + fromIndex;
-            final List<Link> linkSubList = savedLinks.subList(fromIndex, toIndex);
+            final int toIndex = isLastRoom(contentRoomCount, roomIndex) ? links.size() : random.nextInt(links.size() - fromIndex) + fromIndex;
+            final List<Link> linkSubList = links.subList(fromIndex, toIndex);
 
             final List<ContentRoomLink> contentRoomLinks = linkSubList.stream().map(link -> createContentRoomLink(contentRoom, link, random)).collect(Collectors.toList());
             contentRoomLinkRepository.save(contentRoomLinks);
