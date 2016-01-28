@@ -55,7 +55,11 @@ section {
 }
 
 .navbar-nav li.loader {
-    margin: 12px 24px 0 6px;
+    margin: 12px 0 0 6px;
+}
+
+.navbar-nav li.logout {
+    margin-right: 15px;
 }
 
 .pictureDetail {
