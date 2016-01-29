@@ -44,11 +44,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/app/**").addResourceLocations("/app/");
     }
 
-//    @Override
-//    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-//        configurer.enable();
-//    }
-
     @Bean
     public InternalResourceViewResolver getInternalResourceViewResolver() {
         final InternalResourceViewResolver resolver = new InternalResourceViewResolver();
