@@ -99,6 +99,7 @@ public class ContentRoomController {
                                                                   @PathVariable("pageSize") final int pageSize) {
         final List<ContentRoomLink> links = contentRoomService.findLinks(roomId, startIndex, pageSize);
         final List<ContentRoomLinkResource> resources = new ContentRoomLinkResourceAsm(new LinkResourceAsm()).toResources(links);
+        LOGGER.info("Returning " + resources.size() + " links of room '" + roomId + "', from index " + startIndex + " and page size of " + pageSize);
         return new ResponseEntity<>(resources, HttpStatus.OK);
     }
 

@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -166,7 +167,7 @@ public class ContentRoomServiceImpl implements ContentRoomService {
         }
 
         final List<ContentRoomLink> contentRoomLinks = contentRoomLinkPage.getContent();
-        return contentRoomLinks.subList(elementsToSkip, contentRoomLinks.size());
+        return elementsToSkip < contentRoomLinks.size() ? contentRoomLinks.subList(elementsToSkip, contentRoomLinks.size()) : Collections.emptyList();
     }
 
     @Override
@@ -183,10 +184,14 @@ public class ContentRoomServiceImpl implements ContentRoomService {
     @Override
     public void addPermission(final ContentRoom room, final Sid sid, final Permission permission) {
         final ObjectIdentity objectIdentity = createObjectIdentityFrom(room);
+        addPermission(objectIdentity, sid, permission);
+    }
+
+    @Override
+    public void addPermission(final ObjectIdentity objectIdentity, final Sid sid, final Permission permission) {
         final MutableAcl mutableAcl = mutableAclService.createAcl(objectIdentity);
         mutableAcl.insertAce(mutableAcl.getEntries().size(), permission, sid, true);
         mutableAclService.updateAcl(mutableAcl);
-
     }
 
     @Override

@@ -23,6 +23,7 @@
 package meresti.linkviewer.core.tool;
 
 import meresti.linkviewer.core.RelevanceRateCalculator;
+import meresti.linkviewer.core.SpecialContentRooms;
 import meresti.linkviewer.core.entities.*;
 import meresti.linkviewer.core.repositories.ContentRoomLinkRepository;
 import meresti.linkviewer.core.repositories.LinkRepository;
@@ -34,6 +35,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.domain.GrantedAuthoritySid;
+import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -88,6 +92,8 @@ public class StoreInitializer {
         final List<ContentRoom> savedContentRooms = contentRoomService.createRooms(contentRooms);
 
         saveContentRoomLinks(savedLinks, savedContentRooms);
+
+        contentRoomService.addPermission(new ObjectIdentityImpl(ContentRoom.class, SpecialContentRooms.ALL_ROOMS.getId().toString()), new GrantedAuthoritySid("ROLE_USER"), BasePermission.READ);
     }
 
     private static void setUserWhoOwnsAllCreatedData(final User user) {

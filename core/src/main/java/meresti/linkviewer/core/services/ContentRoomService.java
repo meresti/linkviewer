@@ -27,6 +27,7 @@ import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.core.entities.Link;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;
 
@@ -64,6 +65,8 @@ public interface ContentRoomService {
 
     @PreAuthorize("hasPermission(#room, admin)")
     void addPermission(ContentRoom room, Sid sid, Permission permission);
+
+    void addPermission(ObjectIdentity objectIdentity, Sid sid, Permission permission);
 
     @PreAuthorize("hasPermission(#room, admin)")
     void deletePermission(ContentRoom room, Sid sid, Permission permission);
