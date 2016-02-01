@@ -282,7 +282,5 @@ public class DummyDataCollection {
 
     public static List<String> CONTENT_ROOMS = Arrays.asList("Room 1", "Room 2", "Room 3");
 
-    public static User NORMAL_USER = new User(null, "user", "welcome");
-
-    public static User ADMIN_USER = new User(null, "admin", "welcome");
+    public static List<User> USERS = Arrays.asList(new User(null, "user", "welcome", "ROLE_USER"), new User(null, "admin", "welcome", "ROLE_ADMINISTRATOR"));
 }

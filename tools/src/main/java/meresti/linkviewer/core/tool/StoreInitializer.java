@@ -27,8 +27,8 @@ import meresti.linkviewer.core.SpecialContentRooms;
 import meresti.linkviewer.core.entities.*;
 import meresti.linkviewer.core.repositories.ContentRoomLinkRepository;
 import meresti.linkviewer.core.repositories.LinkRepository;
-import meresti.linkviewer.core.repositories.UserRepository;
 import meresti.linkviewer.core.services.ContentRoomService;
+import meresti.linkviewer.core.services.UserService;
 import meresti.linkviewer.core.spring.AppConfig;
 import meresti.linkviewer.rest.spring.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Component
@@ -63,7 +66,7 @@ public class StoreInitializer {
     private ContentRoomLinkRepository contentRoomLinkRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private LinkRepository linkRepository;
@@ -83,7 +86,7 @@ public class StoreInitializer {
 
     @Transactional
     private void initStore() {
-        final List<User> savedUsers = userRepository.save(Arrays.asList(DummyDataCollection.NORMAL_USER, DummyDataCollection.ADMIN_USER));
+        final List<User> savedUsers = userService.createUsers(DummyDataCollection.USERS);
         setUserWhoOwnsAllCreatedData(savedUsers.get(1));
 
         final List<Link> savedLinks = linkRepository.save(DummyDataCollection.LINKS);
@@ -97,7 +100,7 @@ public class StoreInitializer {
     }
 
     private static void setUserWhoOwnsAllCreatedData(final User user) {
-        final Authentication authRequest = new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword(), AuthorityUtils.createAuthorityList("ROLE_ADMINISTRATOR"));
+        final Authentication authRequest = new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword(), AuthorityUtils.createAuthorityList(user.getRoles()));
         SecurityContextHolder.getContext().setAuthentication(authRequest);
     }
 
