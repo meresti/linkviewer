@@ -60,7 +60,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return AuthorityUtils.createAuthorityList("ROLE_USER");
+            return AuthorityUtils.createAuthorityList(user.getRoles());
         }
 
         @Override

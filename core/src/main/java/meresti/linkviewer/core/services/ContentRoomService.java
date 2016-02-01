@@ -36,15 +36,19 @@ import java.util.List;
 
 public interface ContentRoomService {
 
+    @PreAuthorize("isAuthenticated()")
     ContentRoom createRoom(ContentRoom room);
 
+    @PreAuthorize("isAuthenticated()")
     List<ContentRoom> createRooms(List<ContentRoom> rooms);
 
+    @PreAuthorize("hasPermission(#id?.toString(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
     ContentRoom deleteRoom(BigInteger id);
 
+    @PreAuthorize("hasPermission(#room?.getId(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
     ContentRoom deleteRoom(ContentRoom room);
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @PostFilter("hasPermission(filterObject?.getId()?.toString(),'meresti.linkviewer.core.entities.ContentRoom', 'read') or " +
             "hasPermission(filterObject?.getId()?.toString(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
     List<ContentRoom> getRooms();
@@ -66,6 +70,7 @@ public interface ContentRoomService {
     @PreAuthorize("hasPermission(#room, admin)")
     void addPermission(ContentRoom room, Sid sid, Permission permission);
 
+    // @PreAuthorize("hasPermission(#objectIdentity?.getIdentifier(), #objectIdentity?.getType(), admin)")
     void addPermission(ObjectIdentity objectIdentity, Sid sid, Permission permission);
 
     @PreAuthorize("hasPermission(#room, admin)")

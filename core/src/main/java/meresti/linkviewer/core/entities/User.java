@@ -37,13 +37,16 @@ public class User {
 
     private String password;
 
+    private String[] roles;
+
     public User() {
     }
 
-    public User(final BigInteger id, final String name, final String password) {
+    public User(final BigInteger id, final String name, final String password, final String... roles) {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.roles = roles;
     }
 
     public BigInteger getId() {
@@ -68,5 +71,13 @@ public class User {
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public String[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(final String[] roles) {
+        this.roles = roles;
     }
 }
