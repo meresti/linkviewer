@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,22 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.spring;
+package meresti.linkviewer.core.security;
 
-import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@ComponentScan({"meresti.linkviewer.core.services", "meresti.linkviewer.core.security"})
-@PropertySource("classpath:/meresti/linkviewer/spring/app.properties")
-@Import(RepositoryConfig.class)
-@EnableAspectJAutoProxy
-public class AppConfig {
+@Component
+@Aspect
+public class AclCreateAspect {
 
-    @Bean
-    public PropertySourcesPlaceholderConfigurer propertyConfigIn() {
-        return new PropertySourcesPlaceholderConfigurer();
+    private static final Logger LOGGER = LogManager.getLogger(AclCreateAspect.class);
+
+    @AfterReturning("execution(public * meresti.linkviewer.core.services.ContentRoomService+.*(..)) && @annotation(aclGrantPermission)")
+    public void log(final AclGrantPermission aclGrantPermission) {
+        LOGGER.info("My aspect's log method has been invoked");
     }
 }

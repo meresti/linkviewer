@@ -28,6 +28,7 @@ import meresti.linkviewer.core.entities.*;
 import meresti.linkviewer.core.repositories.ContentRoomLinkRepository;
 import meresti.linkviewer.core.repositories.LinkRepository;
 import meresti.linkviewer.core.services.ContentRoomService;
+import meresti.linkviewer.core.services.PermissionService;
 import meresti.linkviewer.core.services.UserService;
 import meresti.linkviewer.core.spring.AppConfig;
 import meresti.linkviewer.rest.spring.SecurityConfig;
@@ -69,6 +70,9 @@ public class StoreInitializer {
     private UserService userService;
 
     @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
     private LinkRepository linkRepository;
 
     public static void main(final String[] args) {
@@ -96,7 +100,7 @@ public class StoreInitializer {
 
         saveContentRoomLinks(savedLinks, savedContentRooms);
 
-        contentRoomService.addPermission(new ObjectIdentityImpl(ContentRoom.class, SpecialContentRooms.ALL_ROOMS.getId().toString()), new GrantedAuthoritySid("ROLE_USER"), BasePermission.READ);
+        permissionService.addPermission(new ObjectIdentityImpl(ContentRoom.class, SpecialContentRooms.ALL_ROOMS.getId().toString()), new GrantedAuthoritySid("ROLE_USER"), BasePermission.READ);
     }
 
     private static void setUserWhoOwnsAllCreatedData(final User user) {

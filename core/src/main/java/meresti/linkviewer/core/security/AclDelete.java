@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,13 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.spring;
+package meresti.linkviewer.core.security;
 
-import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import java.lang.annotation.*;
 
-@Configuration
-@ComponentScan({"meresti.linkviewer.core.services", "meresti.linkviewer.core.security"})
-@PropertySource("classpath:/meresti/linkviewer/spring/app.properties")
-@Import(RepositoryConfig.class)
-@EnableAspectJAutoProxy
-public class AppConfig {
-
-    @Bean
-    public PropertySourcesPlaceholderConfigurer propertyConfigIn() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+public @interface AclDelete {
 }

@@ -25,11 +25,10 @@ package meresti.linkviewer.core.services;
 import meresti.linkviewer.core.entities.ContentRoom;
 import meresti.linkviewer.core.entities.ContentRoomLink;
 import meresti.linkviewer.core.entities.Link;
+import meresti.linkviewer.core.security.AclDelete;
+import meresti.linkviewer.core.security.AclGrantPermission;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.acls.model.ObjectIdentity;
-import org.springframework.security.acls.model.Permission;
-import org.springframework.security.acls.model.Sid;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -37,15 +36,19 @@ import java.util.List;
 public interface ContentRoomService {
 
     @PreAuthorize("isAuthenticated()")
+    @AclGrantPermission("admin")
     ContentRoom createRoom(ContentRoom room);
 
     @PreAuthorize("isAuthenticated()")
+    @AclGrantPermission("admin")
     List<ContentRoom> createRooms(List<ContentRoom> rooms);
 
     @PreAuthorize("hasPermission(#id?.toString(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
+    @AclDelete
     ContentRoom deleteRoom(BigInteger id);
 
     @PreAuthorize("hasPermission(#room?.getId(),'meresti.linkviewer.core.entities.ContentRoom', admin)")
+    @AclDelete
     ContentRoom deleteRoom(ContentRoom room);
 
     @PreAuthorize("isAuthenticated()")
@@ -66,13 +69,4 @@ public interface ContentRoomService {
     List<ContentRoomLink> findLinks(BigInteger roomId, long startIndex, int pageSize);
 
     Link findLinkById(BigInteger id);
-
-    @PreAuthorize("hasPermission(#room, admin)")
-    void addPermission(ContentRoom room, Sid sid, Permission permission);
-
-    // @PreAuthorize("hasPermission(#objectIdentity?.getIdentifier(), #objectIdentity?.getType(), admin)")
-    void addPermission(ObjectIdentity objectIdentity, Sid sid, Permission permission);
-
-    @PreAuthorize("hasPermission(#room, admin)")
-    void deletePermission(ContentRoom room, Sid sid, Permission permission);
 }

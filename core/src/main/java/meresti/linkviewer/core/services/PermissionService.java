@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. meresti
+ * Copyright (c) 2016. meresti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,21 @@
  * SOFTWARE.
  */
 
-package meresti.linkviewer.core.spring;
+package meresti.linkviewer.core.services;
 
-import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import meresti.linkviewer.core.entities.ContentRoom;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.acls.model.ObjectIdentity;
+import org.springframework.security.acls.model.Permission;
+import org.springframework.security.acls.model.Sid;
 
-@Configuration
-@ComponentScan({"meresti.linkviewer.core.services", "meresti.linkviewer.core.security"})
-@PropertySource("classpath:/meresti/linkviewer/spring/app.properties")
-@Import(RepositoryConfig.class)
-@EnableAspectJAutoProxy
-public class AppConfig {
+public interface PermissionService {
+    @PreAuthorize("hasPermission(#room, admin)")
+    void addPermission(ContentRoom room, Sid sid, Permission permission);
 
-    @Bean
-    public PropertySourcesPlaceholderConfigurer propertyConfigIn() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
+    // @PreAuthorize("hasPermission(#objectIdentity?.getIdentifier(), #objectIdentity?.getType(), admin)")
+    void addPermission(ObjectIdentity objectIdentity, Sid sid, Permission permission);
+
+    @PreAuthorize("hasPermission(#room, admin)")
+    void deletePermission(ContentRoom room, Sid sid, Permission permission);
 }

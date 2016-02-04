@@ -17,6 +17,7 @@ dependencies {
     compile 'org.springframework.data:spring-data-commons:1.11.1.RELEASE'
     compile 'org.springframework.data:spring-data-commons-core:1.4.1.RELEASE'
     compile 'org.springframework.data:spring-data-mongodb:1.8.1.RELEASE'
+    compile 'org.springframework:spring-aspects:4.2.4.RELEASE'
 
     compile 'com.mysema.querydsl:querydsl-mongodb:3.7.0'
 }
