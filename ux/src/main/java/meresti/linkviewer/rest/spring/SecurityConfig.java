@@ -38,8 +38,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.RememberMeServices;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
@@ -97,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .rememberMe()
                 .tokenValiditySeconds(tokenValiditySeconds)
                 .key(rememberMeKey)
-                .rememberMeServices(rememberMeService())
+                .tokenRepository(persistentTokenRepository)
                 .and()
             .httpBasic()
                 .and()
@@ -107,10 +105,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf()
                 .disable();
         // @formatter:on
-    }
-
-    @Bean
-    public RememberMeServices rememberMeService() {
-        return new PersistentTokenBasedRememberMeServices(rememberMeKey, userDetailsService(), persistentTokenRepository);
     }
 }
