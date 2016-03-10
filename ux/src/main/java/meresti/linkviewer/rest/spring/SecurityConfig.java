@@ -24,7 +24,9 @@ package meresti.linkviewer.rest.spring;
 
 import meresti.linkviewer.core.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,15 +38,28 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Import(SecurityAclConfig.class)
+@ComponentScan
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PersistentTokenRepository persistentTokenRepository;
+
+    @Value("${security.remember-me.key}")
+    private String rememberMeKey;
+
+    @Value("${security.remember-me.tokenValiditySeconds}")
+    private int tokenValiditySeconds;
 
     @Override
     protected UserDetailsService userDetailsService() {
@@ -79,6 +94,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .formLogin()
                 .and()
+            .rememberMe()
+                .tokenValiditySeconds(tokenValiditySeconds)
+                .key(rememberMeKey)
+                .rememberMeServices(rememberMeService())
+                .and()
             .httpBasic()
                 .and()
             .logout()
@@ -87,5 +107,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf()
                 .disable();
         // @formatter:on
+    }
+
+    @Bean
+    public RememberMeServices rememberMeService() {
+        return new PersistentTokenBasedRememberMeServices(rememberMeKey, userDetailsService(), persistentTokenRepository);
     }
 }
